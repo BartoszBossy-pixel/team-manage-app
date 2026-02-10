@@ -89,8 +89,7 @@ class JiraClient {
 
   constructor(config: JiraClientConfig) {
     this.config = config;
-    // @ts-ignore
-      this.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+    this.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
   }
 
   private getAuthHeader(): string {
@@ -118,9 +117,8 @@ class JiraClient {
 
   // Helper method to get Pixels team filter
   private getPixelsTeamFilter(): string {
-    // @ts-ignore
-    const globalVars = import.meta ? import.meta.env : {};
-    return `project="${globalVars.VITE_Global_Delivery || 'Global Delivery'}" AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${globalVars.ID_ALICJA},${globalVars.ID_RAKU},${globalVars.ID_SZYMON},${globalVars.ID_TOMEK}, ${globalVars.ID_KRZYSIEK}, ${globalVars.ID_OLIWER})) AND "Platform[Dropdown]" in (SE)`;
+    const env = import.meta.env;
+    return `project="${env.VITE_GLOBAL_DELIVERY || 'Global Delivery'}" AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${env.ID_ALICJA},${env.ID_RAKU},${env.ID_SZYMON},${env.ID_TOMEK}, ${env.ID_KRZYSIEK}, ${env.ID_OLIWER})) AND "Platform[Dropdown]" in (SE)`;
   }
 
   async fetchProjectIssues(status?: string): Promise<JiraIssue[]> {
@@ -381,13 +379,12 @@ class JiraClient {
 
 // Factory function to create Jira client with environment variables
 export const createJiraClient = (): JiraClient => {
-  // @ts-ignore
-  const globalVars = import.meta ? import.meta.env : {};
+  const env = import.meta.env;
   const config: JiraClientConfig = {
-    domain: globalVars.VITE_JIRA_DOMAIN || '',
-    email: globalVars.VITE_JIRA_EMAIL || '',
-    apiToken: globalVars.VITE_JIRA_API_TOKEN || '',
-    projectKey: globalVars.VITE_JIRA_PROJECT_KEY || ''
+    domain: env.VITE_JIRA_DOMAIN || '',
+    email: env.VITE_JIRA_EMAIL || '',
+    apiToken: env.VITE_JIRA_API_TOKEN || '',
+    projectKey: env.VITE_JIRA_PROJECT_KEY || ''
   };
 
   if (!config.domain || !config.email || !config.apiToken || !config.projectKey) {

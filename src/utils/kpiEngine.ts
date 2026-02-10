@@ -59,14 +59,6 @@ const MAINTENANCE_ISSUE_TYPES = [
   'Maintenance'
 ];
 
-const NEW_PRODUCT_ISSUE_TYPES = [
-  'Story',
-  'Feature',
-  'Epic',
-  'Task',
-  'Improvement',
-  'New Feature'
-];
 
 export class KPIEngine {
   
@@ -200,7 +192,6 @@ export class KPIEngine {
     // This is a simplified estimation based on issue characteristics
     // In a real implementation, you would fetch issue changelog/history
     
-    const fields = issue.fields as any;
     const issueAge = this.calculateCycleTime(issue) || 0;
     
     // Estimate changes based on issue complexity and age
@@ -386,7 +377,7 @@ export class KPIEngine {
           daysLate,
           issueType: issue.fields.issuetype.name,
           category: this.categorizeIssue(issue)
-        };
+        } as EDDAnalysisData;
       })
       .filter((data): data is EDDAnalysisData => data !== null);
   }

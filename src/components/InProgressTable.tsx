@@ -15,8 +15,7 @@ const TeamTasksTable: React.FC<TeamTasksTableProps> = ({ teamName = "Pixels" }) 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { getUserAvatarStyle } = useUsers();
-  // @ts-ignore
-    const globalVars = import.meta ? import.meta.env : {};
+  const env = import.meta.env;
   
   // Use table settings hook for DynamoDB integration
   const {
@@ -83,11 +82,11 @@ const TeamTasksTable: React.FC<TeamTasksTableProps> = ({ teamName = "Pixels" }) 
 
     try {
       // JQL query matching the Jira view exactly
-      let jql = `project="${globalVars.VITE_Global_Delivery || 'Global Delivery'}"`;
+      let jql = `project="${env.VITE_GLOBAL_DELIVERY || 'Global Delivery'}"`;
       
       // Add team filter - exact match to Jira view
       if (teamName && teamName.toLowerCase() === 'pixels') {
-        jql += ` AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${globalVars.ID_ALICJA},${globalVars.ID_RAKU},${globalVars.ID_TOMEK}, ${globalVars.ID_KRZYSIEK}, ${globalVars.ID_OLIWER}))`;
+        jql += ` AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${env.ID_ALICJA},${env.ID_RAKU},${env.ID_TOMEK}, ${env.ID_KRZYSIEK}, ${env.ID_OLIWER}))`;
       } else if (teamName && teamName.toLowerCase() !== 'all') {
         jql += ` AND ("Team (GOLD)[Dropdown]"="${teamName}")`;
       }
@@ -102,9 +101,9 @@ const TeamTasksTable: React.FC<TeamTasksTableProps> = ({ teamName = "Pixels" }) 
       jql += ` ORDER BY cf[14219] ASC, assignee ASC, status ASC`;
 
       // Use the general search endpoint with optimized parameters
-      const response = await fetch(`${globalVars.VITE_API_BASE_URL || 'http://localhost:3000'}/api/jira-search?` + new URLSearchParams({
-        domain: globalVars.VITE_JIRA_DOMAIN,
-        auth: btoa(`${globalVars.VITE_JIRA_EMAIL}:${globalVars.VITE_JIRA_API_TOKEN}`),
+      const response = await fetch(`${env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/jira-search?` + new URLSearchParams({
+        domain: env.VITE_JIRA_DOMAIN || '',
+        auth: btoa(`${env.VITE_JIRA_EMAIL || ''}:${env.VITE_JIRA_API_TOKEN || ''}`),
         jql: jql,
         maxResults: '50'
       }));
@@ -1064,7 +1063,7 @@ const TeamTasksTable: React.FC<TeamTasksTableProps> = ({ teamName = "Pixels" }) 
                     }}>
                       <AnimatedTooltip content={issue.key} position="top">
                         <a
-                          href={`https://${globalVars.VITE_JIRA_DOMAIN}/browse/${issue.key}`}
+                          href={`https://${env.VITE_JIRA_DOMAIN}/browse/${issue.key}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="issue-key-link"

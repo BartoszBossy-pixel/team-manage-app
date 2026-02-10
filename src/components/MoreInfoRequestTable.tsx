@@ -20,11 +20,9 @@ const MoreInfoRequestTable: React.FC<MoreInfoRequestTableProps> = ({ teamName = 
   // Use table settings hook for localStorage integration
   const {
     settings: tableSettings,
-    loading: settingsLoading,
     updateFilters,
     updateSort,
     updateColumnWidth,
-    getVisibleColumns,
     getColumnWidth
   } = useTableSettings('more-info-request');
 
@@ -82,7 +80,7 @@ const MoreInfoRequestTable: React.FC<MoreInfoRequestTableProps> = ({ teamName = 
 
     try {
       // JQL query for More Info Request statuses
-      let jql = `project="${import.meta.env.VITE_Global_Delivery || 'Global Delivery'}"`;
+      let jql = `project="${import.meta.env.VITE_GLOBAL_DELIVERY || 'Global Delivery'}"`;
       
       // Add team filter
       if (teamName && teamName.toLowerCase() === 'pixels') {
@@ -101,12 +99,13 @@ const MoreInfoRequestTable: React.FC<MoreInfoRequestTableProps> = ({ teamName = 
       jql += ` ORDER BY cf[14219] ASC, assignee ASC, status ASC`;
 
       // Use the general search endpoint
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/jira-search?` + new URLSearchParams({
-        domain: import.meta.env.VITE_JIRA_DOMAIN,
-        auth: btoa(`${import.meta.env.VITE_JIRA_EMAIL}:${import.meta.env.VITE_JIRA_API_TOKEN}`),
+      const params = new URLSearchParams({
+        domain: import.meta.env.VITE_JIRA_DOMAIN || '',
+        auth: btoa(`${import.meta.env.VITE_JIRA_EMAIL || ''}:${import.meta.env.VITE_JIRA_API_TOKEN || ''}`),
         jql: jql,
         maxResults: '100'
-      }));
+      });
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/jira-search?${params}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

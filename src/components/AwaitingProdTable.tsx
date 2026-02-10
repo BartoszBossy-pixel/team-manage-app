@@ -19,11 +19,9 @@ const AwaitingProdTable: React.FC<AwaitingProdTableProps> = ({ teamName = "Pixel
   // Use table settings hook for localStorage integration
   const {
     settings: tableSettings,
-    loading: settingsLoading,
     updateFilters,
     updateSort,
     updateColumnWidth,
-    getVisibleColumns,
     getColumnWidth
   } = useTableSettings('awaiting-prod');
 
@@ -82,7 +80,7 @@ const AwaitingProdTable: React.FC<AwaitingProdTableProps> = ({ teamName = "Pixel
 
     try {
       // JQL query for Awaiting Prod status
-      let jql = `project="${import.meta.env.VITE_Global_Delivery || 'Global Delivery'}"`;
+      let jql = `project="${import.meta.env.VITE_GLOBAL_DELIVERY || 'Global Delivery'}"`;
       
       // Add team filter
       if (teamName && teamName.toLowerCase() === 'pixels') {
@@ -101,12 +99,13 @@ const AwaitingProdTable: React.FC<AwaitingProdTableProps> = ({ teamName = "Pixel
       jql += ` ORDER BY cf[14219] ASC, assignee ASC, status ASC`;
 
       // Use the general search endpoint
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/jira-search?` + new URLSearchParams({
-        domain: import.meta.env.VITE_JIRA_DOMAIN,
-        auth: btoa(`${import.meta.env.VITE_JIRA_EMAIL}:${import.meta.env.VITE_JIRA_API_TOKEN}`),
+      const params = new URLSearchParams({
+        domain: import.meta.env.VITE_JIRA_DOMAIN || '',
+        auth: btoa(`${import.meta.env.VITE_JIRA_EMAIL || ''}:${import.meta.env.VITE_JIRA_API_TOKEN || ''}`),
         jql: jql,
         maxResults: '100'
-      }));
+      });
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/jira-search?${params}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -144,13 +143,6 @@ const AwaitingProdTable: React.FC<AwaitingProdTableProps> = ({ teamName = "Pixel
     });
   };
 
-  const getDaysInProgress = (createdDate: string) => {
-    const created = new Date(createdDate);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - created.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
 
   const handleSort = (key: string) => {
     let direction: 'asc' | 'desc' = 'asc';

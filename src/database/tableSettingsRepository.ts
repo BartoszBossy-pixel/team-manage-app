@@ -1,6 +1,6 @@
-import { GetCommand, PutCommand, ScanCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
+import { GetCommand, PutCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 import { dynamoClient, TABLE_NAMES, isDynamoDBAvailable } from './dynamoClient';
-import { TableSettings, TableSettingsData, TableType } from '../types/tableSettings';
+import { TableSettings, TableType } from '../types/tableSettings';
 
 export interface TableSettingsRepository {
   getTableSettings(tableType: TableType, userId?: string): Promise<TableSettings | undefined>;
@@ -17,8 +17,6 @@ class DynamoTableSettingsRepository implements TableSettingsRepository {
 
   async getTableSettings(tableType: TableType, userId?: string): Promise<TableSettings | undefined> {
     try {
-      const settingsId = userId ? `${tableType}-${userId}` : tableType;
-      
       const command = new GetCommand({
         TableName: TABLE_NAMES.USER_SETTINGS,
         Key: {
@@ -48,7 +46,12 @@ class DynamoTableSettingsRepository implements TableSettingsRepository {
         TableName: TABLE_NAMES.USER_SETTINGS,
         Item: {
           id: settings.userId ? `${settings.id}-${settings.userId}` : settings.id,
-          ...settings,
+          tableType: settings.id,
+          userId: settings.userId,
+          columns: settings.columns,
+          filters: settings.filters,
+          sort: settings.sort,
+          pageSize: settings.pageSize,
           lastUpdated: Date.now()
         }
       });

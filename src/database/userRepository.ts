@@ -1,4 +1,4 @@
-import { GetCommand, PutCommand, ScanCommand, UpdateCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
+import { GetCommand, PutCommand, ScanCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 import { dynamoClient, TABLE_NAMES, isDynamoDBAvailable } from './dynamoClient';
 import { User, UserData } from '../controllers/UserController';
 

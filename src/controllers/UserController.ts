@@ -38,7 +38,7 @@ class UserController {
           return this.repository;
         }
       } catch (error) {
-        console.warn('[UserController] API repository not available:', error.message);
+        console.warn('[UserController] API repository not available:', error instanceof Error ? error.message : String(error));
       }
       
       // 2. Fallback do direct DynamoDB lub localStorage
