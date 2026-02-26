@@ -7,20 +7,18 @@ interface ImportMetaEnv {
   readonly VITE_AWS_SECRET_ACCESS_KEY?: string
   readonly VITE_DYNAMODB_USERS_TABLE?: string
   readonly VITE_DYNAMODB_USER_SETTINGS_TABLE?: string
-  readonly VITE_JIRA_BASE_URL?: string
-  readonly VITE_JIRA_USERNAME?: string
   readonly VITE_JIRA_API_TOKEN?: string
   readonly VITE_JIRA_DOMAIN?: string
   readonly VITE_JIRA_EMAIL?: string
   readonly VITE_JIRA_PROJECT_KEY?: string
   readonly VITE_API_BASE_URL?: string
   readonly VITE_GLOBAL_DELIVERY?: string
-  readonly ID_ALICJA?: string
-  readonly ID_RAKU?: string
-  readonly ID_SZYMON?: string
-  readonly ID_TOMEK?: string
-  readonly ID_KRZYSIEK?: string
-  readonly ID_OLIWER?: string
+  readonly VITE_TEAM_FIELD_NAME?: string
+  readonly VITE_ID_ALICJA?: string
+  readonly VITE_ID_RAKU?: string
+  readonly VITE_ID_TOMEK?: string
+  readonly VITE_ID_KRZYSIEK?: string
+  readonly VITE_ID_OLIWER?: string
   readonly VITE_ROLE_TOMASZ_RUSINSKI?: string
   readonly VITE_ROLE_BARTOSZ_BOSSY?: string
   readonly VITE_ROLE_OLIWER_PAWELSKI?: string

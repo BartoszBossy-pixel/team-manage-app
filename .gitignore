@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Environment variables (never commit!)
+.env
+.env.local
+.env.production
+
+# Build output
+dist/
+
+# Database files
+docker/dynamodb/*.db
+docker/dynamodb/*.db-shm
+docker/dynamodb/*.db-wal
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*

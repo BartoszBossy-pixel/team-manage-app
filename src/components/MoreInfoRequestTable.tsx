@@ -84,7 +84,7 @@ const MoreInfoRequestTable: React.FC<MoreInfoRequestTableProps> = ({ teamName = 
       
       // Add team filter
       if (teamName && teamName.toLowerCase() === 'pixels') {
-        jql += ` AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${import.meta.env.ID_ALICJA},${import.meta.env.ID_RAKU},${import.meta.env.ID_TOMEK}, ${import.meta.env.ID_KRZYSIEK}, ${import.meta.env.ID_OLIWER}))`;
+        jql += ` AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${import.meta.env.VITE_ID_ALICJA},${import.meta.env.VITE_ID_RAKU},${import.meta.env.VITE_ID_TOMEK}, ${import.meta.env.VITE_ID_KRZYSIEK}, ${import.meta.env.VITE_ID_OLIWER}))`;
       } else if (teamName && teamName.toLowerCase() !== 'all') {
         jql += ` AND ("Team (GOLD)[Dropdown]"="${teamName}")`;
       }

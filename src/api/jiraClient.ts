@@ -118,7 +118,17 @@ class JiraClient {
   // Helper method to get Pixels team filter
   private getPixelsTeamFilter(): string {
     const env = import.meta.env;
-    return `project="${env.VITE_GLOBAL_DELIVERY || 'Global Delivery'}" AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${env.ID_ALICJA},${env.ID_RAKU},${env.ID_SZYMON},${env.ID_TOMEK}, ${env.ID_KRZYSIEK}, ${env.ID_OLIWER})) AND "Platform[Dropdown]" in (SE)`;
+    // Filtruj tylko istniejące ID (usuń undefined wartości)
+    const teamIds = [env.VITE_ID_ALICJA, env.VITE_ID_RAKU, env.VITE_ID_TOMEK, env.VITE_ID_KRZYSIEK, env.VITE_ID_OLIWER]
+      .filter(id => id && id !== 'undefined' && id.trim() !== '')
+      .join(',');
+    
+    // Jeśli nie ma żadnych ID, użyj tylko filtra zespołu
+    if (!teamIds) {
+      return `project="${env.VITE_GLOBAL_DELIVERY || 'Global Delivery'}" AND "Team (GOLD)[Dropdown]"=Pixels AND "Platform[Dropdown]" in (SE)`;
+    }
+    
+    return `project="${env.VITE_GLOBAL_DELIVERY || 'Global Delivery'}" AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${teamIds})) AND "Platform[Dropdown]" in (SE)`;
   }
 
   async fetchProjectIssues(status?: string): Promise<JiraIssue[]> {

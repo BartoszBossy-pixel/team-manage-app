@@ -35,11 +35,11 @@ VITE_GLOBAL_DELIVERY=Global Delivery
 
 #### Team IDs
 ```
-ID_ALICJA=557058:22f7c68d-94c8-4fc5-9f08-6b4ab5374c82
-ID_RAKU=557058:41afc69b-a7a7-4c0c-a567-e8a546d839a2
-ID_TOMEK=5d19ba6643d1510d3accd22d
-ID_KRZYSIEK=557058:55341d8b-a3fe-491b-ab75-40d9e3170a3b
-ID_OLIWER=712020:25d2841e-e973-410c-8305-848ec4228eb8
+VITE_ID_ALICJA=557058:22f7c68d-94c8-4fc5-9f08-6b4ab5374c82
+VITE_ID_RAKU=557058:41afc69b-a7a7-4c0c-a567-e8a546d839a2
+VITE_ID_TOMEK=5d19ba6643d1510d3accd22d
+VITE_ID_KRZYSIEK=557058:55341d8b-a3fe-491b-ab75-40d9e3170a3b
+VITE_ID_OLIWER=712020:25d2841e-e973-410c-8305-848ec4228eb8
 ```
 
 #### Team Configuration
@@ -126,3 +126,9 @@ Upewnij się, że wszystkie zmienne środowiskowe są poprawnie skonfigurowane w
 
 ### Problem z DynamoDB
 Dla lokalnego testowania użyj DynamoDB Local, dla produkcji skonfiguruj prawdziwe AWS DynamoDB.
+
+### Problem z undefined w JQL queries
+Jeśli widzisz `undefined` w zapytaniach JQL (np. `assignee in(undefined,undefined,...)`), oznacza to że niektóre zmienne środowiskowe z ID zespołu nie są poprawnie skonfigurowane. Upewnij się, że wszystkie zmienne `ID_*` są poprawnie ustawione w Vercel Environment Variables.
+
+### Problem z nieistniejącymi zmiennymi środowiskowymi
+Kod automatycznie filtruje nieistniejące lub undefined wartości ID użytkowników, więc zapytania JQL będą zawierać tylko prawidłowe ID.

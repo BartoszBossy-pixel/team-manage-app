@@ -86,7 +86,7 @@ const TeamTasksTable: React.FC<TeamTasksTableProps> = ({ teamName = "Pixels" }) 
       
       // Add team filter - exact match to Jira view
       if (teamName && teamName.toLowerCase() === 'pixels') {
-        jql += ` AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${env.ID_ALICJA},${env.ID_RAKU},${env.ID_TOMEK}, ${env.ID_KRZYSIEK}, ${env.ID_OLIWER}))`;
+        jql += ` AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${env.VITE_ID_ALICJA},${env.VITE_ID_RAKU},${env.VITE_ID_TOMEK}, ${env.VITE_ID_KRZYSIEK}, ${env.VITE_ID_OLIWER}))`;
       } else if (teamName && teamName.toLowerCase() !== 'all') {
         jql += ` AND ("Team (GOLD)[Dropdown]"="${teamName}")`;
       }
