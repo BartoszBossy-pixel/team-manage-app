@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     console.log(`Fetching Jira issues with JQL: ${jql}`);
     console.log(`Domain: ${domain}`);
 
-    const response = await axios.get(`https://${domain}/rest/api/3/search`, {
+    const response = await axios.get(`https://${domain}/rest/api/3/search/jql`, {
       params: {
         jql,
         maxResults,
