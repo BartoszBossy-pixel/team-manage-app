@@ -121,34 +121,33 @@ class TableSettingsController {
 
   // Zapisz ustawienia tabeli
   async saveTableSettings(settings: TableSettings): Promise<void> {
+    const tableType = settings.id as TableType;
+
+    if (!tableType) {
+      console.error(`[TableSettingsController] Invalid tableType from settings.id:`, settings.id);
+      return;
+    }
+
+    const config = TABLE_STORAGE_CONFIG[tableType];
+    const effectiveUserId = config.isGlobal ? undefined : settings.userId;
+    const settingsToSave: TableSettings = {
+      ...settings,
+      userId: effectiveUserId,
+      lastUpdated: Date.now()
+    };
+
+    const repository = await this.getRepository(tableType);
+
     try {
-      console.log(`[TableSettingsController] saveTableSettings called with settings:`, settings);
-      const tableType = settings.id as TableType;
-      
-      if (!tableType) {
-        console.error(`[TableSettingsController] Invalid tableType from settings.id:`, settings.id);
-        throw new Error(`Invalid table type: ${settings.id}`);
-      }
-      
-      console.log(`[TableSettingsController] Using tableType: "${tableType}"`);
-      const repository = await this.getRepository(tableType);
-      const config = TABLE_STORAGE_CONFIG[tableType];
-      
-      // Dla globalnych ustawień nie używamy userId
-      const effectiveUserId = config.isGlobal ? undefined : settings.userId;
-      
-      const settingsToSave: TableSettings = {
-        ...settings,
-        userId: effectiveUserId,
-        lastUpdated: Date.now()
-      };
-      
       await repository.saveTableSettings(settingsToSave);
       console.log(`[TableSettingsController] Saved settings for ${tableType}`);
-      
     } catch (error) {
-      console.error(`[TableSettingsController] Error saving settings for ${settings.id}:`, error);
-      throw error;
+      console.warn(`[TableSettingsController] Primary repository failed for ${tableType}, falling back to localStorage:`, error);
+      if (!this.localStorageRepository) {
+        this.localStorageRepository = await getLocalStorageTableSettingsRepository();
+      }
+      await this.localStorageRepository.saveTableSettings(settingsToSave);
+      console.log(`[TableSettingsController] Saved settings for ${tableType} to localStorage (fallback)`);
     }
   }
 
