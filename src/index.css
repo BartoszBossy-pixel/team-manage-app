@@ -520,6 +520,27 @@ input::placeholder {
   transition: background-color 0.06s ease-in-out;
 }
 
+.team-tasks-table tr.subtask-row {
+  background: rgba(0, 0, 0, 0.28) !important;
+  border-left: 3px solid rgba(99, 179, 237, 0.4);
+}
+
+.team-tasks-table tr.subtask-row td {
+  opacity: 0.85;
+}
+
+.team-tasks-table tr.subtask-row:hover {
+  background: rgba(0, 0, 0, 0.18) !important;
+}
+
+.team-tasks-table tr.subtask-row:hover td {
+  opacity: 1;
+}
+
+.team-tasks-table tr.has-subtasks:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
 tbody tr td div  {
     font-weight: bold;
 }
@@ -874,6 +895,8 @@ a.issue-key-link {
   padding: 12px;
   margin-bottom: 12px;
   backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 100;
 }
 
 .filter-row {
@@ -960,7 +983,8 @@ a.issue-key-link {
   position: absolute;
   top: 100%;
   left: 0;
-  right: 0;
+  min-width: 100%;
+  width: max-content;
   background: var(--win11-dark-bg-secondary);
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 6px;

@@ -24,6 +24,14 @@ export interface JiraIssue {
       displayName: string;
       emailAddress: string;
     };
+    parent?: {
+      key: string;
+      fields: {
+        summary: string;
+        status: { name: string; id: string; };
+        issuetype: { name: string; id: string; };
+      };
+    };
     // Custom fields for EDD dates - these might be custom fields in your Jira instance
     customfield_10001?: string; // EDD Start - Expected Development Start Date
     customfield_10002?: string; // ETA Dev - Estimated Time of Arrival for Development

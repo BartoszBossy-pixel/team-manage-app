@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       params: {
         jql,
         maxResults,
-        fields: 'key,issuetype,created,status,summary,priority,assignee,customfield_13587,customfield_13568,customfield_14219,customfield_13188',
+        fields: 'key,issuetype,created,status,summary,priority,assignee,parent,customfield_13587,customfield_13568,customfield_14219,customfield_13188',
         expand: ''
       },
       headers: {

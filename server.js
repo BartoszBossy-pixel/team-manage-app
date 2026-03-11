@@ -39,7 +39,7 @@ app.get('/api/jira-search', async (req, res) => {
       params: {
         jql,
         maxResults,
-        fields: 'key,issuetype,created,status,summary,priority,assignee,customfield_13587,customfield_13568,customfield_14219,customfield_13188',
+        fields: 'key,issuetype,created,status,summary,priority,assignee,parent,customfield_13587,customfield_13568,customfield_14219,customfield_13188',
         expand: '' // Don't expand any additional data
       },
       headers: {
@@ -186,7 +186,7 @@ app.get('/api/jira-in-progress', async (req, res) => {
       params: {
         jql,
         maxResults: 50,
-        fields: 'key,issuetype,created,status,summary,priority,assignee,customfield_13587,customfield_13568,customfield_14219,customfield_13188',
+        fields: 'key,issuetype,created,status,summary,priority,assignee,parent,customfield_13587,customfield_13568,customfield_14219,customfield_13188',
         expand: '' // Don't expand any additional data
       },
       headers: {

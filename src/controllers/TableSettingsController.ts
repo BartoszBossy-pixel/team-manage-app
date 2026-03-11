@@ -94,29 +94,38 @@ class TableSettingsController {
 
   // Pobierz ustawienia tabeli
   async getTableSettings(tableType: TableType, userId?: string): Promise<TableSettings> {
+    const config = TABLE_STORAGE_CONFIG[tableType];
+    const effectiveUserId = config.isGlobal ? undefined : userId;
+
     try {
       const repository = await this.getRepository(tableType);
-      const config = TABLE_STORAGE_CONFIG[tableType];
-      
-      // Dla globalnych ustawień nie używamy userId
-      const effectiveUserId = config.isGlobal ? undefined : userId;
-      
       const settings = await repository.getTableSettings(tableType, effectiveUserId);
-      
+
       if (settings) {
         console.log(`[TableSettingsController] Loaded settings for ${tableType}`);
         return settings;
       }
-      
-      // Zwróć domyślne ustawienia jeśli nie ma zapisanych
-      const defaultSettings = this.createDefaultSettings(tableType, effectiveUserId);
-      console.log(`[TableSettingsController] Using default settings for ${tableType}`);
-      return defaultSettings;
-      
     } catch (error) {
-      console.error(`[TableSettingsController] Error loading settings for ${tableType}:`, error);
-      return this.createDefaultSettings(tableType, userId);
+      console.warn(`[TableSettingsController] Primary repository read failed for ${tableType}, falling back to localStorage:`, error);
     }
+
+    // Fallback: spróbuj odczytać z localStorage (gdy primary repo zawiodło lub nie ma danych)
+    try {
+      if (!this.localStorageRepository) {
+        this.localStorageRepository = await getLocalStorageTableSettingsRepository();
+      }
+      const localSettings = await this.localStorageRepository.getTableSettings(tableType, effectiveUserId);
+      if (localSettings) {
+        console.log(`[TableSettingsController] Loaded settings for ${tableType} from localStorage (fallback)`);
+        return localSettings;
+      }
+    } catch (localError) {
+      console.warn(`[TableSettingsController] localStorage read also failed for ${tableType}:`, localError);
+    }
+
+    // Ostateczny fallback: domyślne ustawienia
+    console.log(`[TableSettingsController] Using default settings for ${tableType}`);
+    return this.createDefaultSettings(tableType, effectiveUserId);
   }
 
   // Zapisz ustawienia tabeli

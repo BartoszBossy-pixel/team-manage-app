@@ -5,6 +5,7 @@ import ColumnResizer from './ColumnResizer';
 import { getInitials } from '../utils/avatarUtils';
 import { useUsers } from '../hooks/useUsers';
 import { useTableSettings } from '../hooks/useTableSettings';
+import { groupIssuesWithSubtasks, ensureParentsIncluded } from '../utils/subtaskGrouping';
 
 interface ToTakeTableProps {
   teamName?: string;
@@ -24,6 +25,16 @@ const ToTakeTable: React.FC<ToTakeTableProps> = ({ teamName = "Pixels" }) => {
     updateColumnWidth,
     getColumnWidth
   } = useTableSettings('to-take');
+
+  const [expandedParents, setExpandedParents] = useState<Set<string>>(new Set());
+
+  const toggleParent = (key: string) => {
+    setExpandedParents(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key); else next.add(key);
+      return next;
+    });
+  };
 
   // Dropdown visibility state
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -52,7 +63,7 @@ const ToTakeTable: React.FC<ToTakeTableProps> = ({ teamName = "Pixels" }) => {
     
     // Default widths for to-take table
     const defaultWidths: { [key: string]: number } = {
-      number: 5, key: 10, summary: 35, status: 12, type: 10, priority: 6, assignee: 8, created: 14
+      number: 5, key: 14, summary: 31, status: 12, type: 10, priority: 6, assignee: 8, created: 14
     };
     return defaultWidths[columnKey] || 8;
   };
@@ -400,7 +411,7 @@ const ToTakeTable: React.FC<ToTakeTableProps> = ({ teamName = "Pixels" }) => {
   }, []);
 
   // Filter and sort logic
-  const filteredIssues = useMemo(() => {
+  const groupedIssues = useMemo(() => {
     let filtered = [...issues];
 
     // Apply filters
@@ -430,58 +441,49 @@ const ToTakeTable: React.FC<ToTakeTableProps> = ({ teamName = "Pixels" }) => {
       );
     }
 
+    // Gdy filtr aktywny - upewnij się że parenty subtasków też są widoczne
+    const hasActiveFilter = filters.status.length > 0 || filters.assignee.length > 0 ||
+      filters.type.length > 0 || filters.priority.length > 0 || !!filters.searchText;
+    if (hasActiveFilter) {
+      filtered = ensureParentsIncluded(filtered, issues);
+    }
+
     // Apply sorting
-    if (!sortConfig) return filtered;
+    if (sortConfig) {
+      filtered.sort((a, b) => {
+        let aValue: any;
+        let bValue: any;
 
-    return filtered.sort((a, b) => {
-      let aValue: any;
-      let bValue: any;
+        switch (sortConfig.key) {
+          case 'number':
+            aValue = issues.indexOf(a) + 1;
+            bValue = issues.indexOf(b) + 1;
+            break;
+          case 'key':
+            aValue = a.key; bValue = b.key; break;
+          case 'summary':
+            aValue = a.fields.summary; bValue = b.fields.summary; break;
+          case 'status':
+            aValue = a.fields.status.name; bValue = b.fields.status.name; break;
+          case 'type':
+            aValue = a.fields.issuetype.name; bValue = b.fields.issuetype.name; break;
+          case 'priority':
+            aValue = a.fields.priority?.name || ''; bValue = b.fields.priority?.name || ''; break;
+          case 'assignee':
+            aValue = a.fields.assignee?.displayName || ''; bValue = b.fields.assignee?.displayName || ''; break;
+          case 'created':
+            aValue = new Date(a.fields.created); bValue = new Date(b.fields.created); break;
+          default:
+            return 0;
+        }
 
-      switch (sortConfig.key) {
-        case 'number':
-          aValue = issues.indexOf(a) + 1;
-          bValue = issues.indexOf(b) + 1;
-          break;
-        case 'key':
-          aValue = a.key;
-          bValue = b.key;
-          break;
-        case 'summary':
-          aValue = a.fields.summary;
-          bValue = b.fields.summary;
-          break;
-        case 'status':
-          aValue = a.fields.status.name;
-          bValue = b.fields.status.name;
-          break;
-        case 'type':
-          aValue = a.fields.issuetype.name;
-          bValue = b.fields.issuetype.name;
-          break;
-        case 'priority':
-          aValue = a.fields.priority?.name || '';
-          bValue = b.fields.priority?.name || '';
-          break;
-        case 'assignee':
-          aValue = a.fields.assignee?.displayName || '';
-          bValue = b.fields.assignee?.displayName || '';
-          break;
-        case 'created':
-          aValue = new Date(a.fields.created);
-          bValue = new Date(b.fields.created);
-          break;
-        default:
-          return 0;
-      }
+        if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
 
-      if (aValue < bValue) {
-        return sortConfig.direction === 'asc' ? -1 : 1;
-      }
-      if (aValue > bValue) {
-        return sortConfig.direction === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
+    return groupIssuesWithSubtasks(filtered);
   }, [issues, filters, sortConfig]);
 
 
@@ -535,7 +537,7 @@ const ToTakeTable: React.FC<ToTakeTableProps> = ({ teamName = "Pixels" }) => {
   return (
     <div className="kpi-card">
       <div className="table-header">
-        <h3>Do wzięcia ({filteredIssues.length})</h3>
+        <h3>Do wzięcia ({groupedIssues.length})</h3>
         <div className="header-controls">
           <button
             className="refresh-icon-button"
@@ -691,7 +693,7 @@ const ToTakeTable: React.FC<ToTakeTableProps> = ({ teamName = "Pixels" }) => {
         </div>
       )}
 
-      {filteredIssues.length === 0 ? (
+      {groupedIssues.length === 0 ? (
         <div className="empty-state">
           <i className="fas fa-check-circle"></i> Brak zadań do wzięcia dla zespołu {teamName}!
         </div>
@@ -883,191 +885,140 @@ const ToTakeTable: React.FC<ToTakeTableProps> = ({ teamName = "Pixels" }) => {
               </tr>
             </thead>
             <tbody>
-              {filteredIssues.map((issue, index) => (
-                <tr key={issue.key}>
-                  <td style={{ width: `${getColumnWidthPercent('number')}%` }}>
-                    <div style={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      textAlign: 'center',
-                      fontSize: '14px',
-                      color: 'var(--win11-dark-text-secondary)',
-                      fontWeight: '500'
-                    }}>
-                      {index + 1}
-                    </div>
-                  </td>
-                  <td style={{ width: `${getColumnWidthPercent('key')}%` }}>
-                    <div style={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap'
-                    }}>
-                      <AnimatedTooltip content={issue.key} position="top">
-                        <a
-                          href={`https://${import.meta.env.VITE_JIRA_DOMAIN}/browse/${issue.key}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="issue-key-link"
-                        >
-                          {truncateText(issue.key, getColumnPixelWidth(getColumnWidthPercent('key')))}
-                        </a>
-                      </AnimatedTooltip>
-                    </div>
-                  </td>
-                  <td style={{ width: `${getColumnWidthPercent('summary')}%` }}>
-                    <AnimatedTooltip content={issue.fields.summary} position="top">
+              {groupedIssues.map((group, groupIndex) => {
+                const { parent: issue, subtasks, isOrphanSubtask } = group;
+                const isExpanded = expandedParents.has(issue.key);
+                const hasSubtasks = subtasks.length > 0;
+
+                const renderIssueRow = (rowIssue: JiraIssue, rowIndex: number, isSubtaskRow: boolean) => (
+                  <tr
+                    key={rowIssue.key}
+                    className={isSubtaskRow ? 'subtask-row' : (hasSubtasks && !isOrphanSubtask ? 'has-subtasks' : '')}
+                    onClick={(!isSubtaskRow && hasSubtasks) ? () => toggleParent(issue.key) : undefined}
+                    style={{ cursor: (!isSubtaskRow && hasSubtasks) ? 'pointer' : 'default' }}
+                  >
+                    <td style={{ width: `${getColumnWidthPercent('number')}%` }}>
                       <div style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        color: 'var(--win11-dark-text-primary)'
+                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        textAlign: 'center', fontSize: '14px',
+                        color: 'var(--win11-dark-text-secondary)', fontWeight: '500',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px'
                       }}>
-                        {truncateText(issue.fields.summary, getColumnPixelWidth(getColumnWidthPercent('summary')))}
+                        {isSubtaskRow ? (
+                          <span style={{ color: 'var(--win11-dark-text-tertiary)' }}>–</span>
+                        ) : (
+                          <>
+                            {hasSubtasks && !isOrphanSubtask && (
+                              <span style={{ fontSize: '9px', opacity: 0.6, lineHeight: 1 }}>
+                                {isExpanded ? '▼' : '▶'}
+                              </span>
+                            )}
+                            {rowIndex + 1}
+                          </>
+                        )}
                       </div>
-                    </AnimatedTooltip>
-                  </td>
-                  <td style={{ width: `${getColumnWidthPercent('status')}%` }}>
-                    <div style={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap'
-                    }}>
-                      <AnimatedTooltip content={issue.fields.status.name} position="top">
-                        <span className="issue-type-badge" style={{
-                          backgroundColor: getStatusColor(issue.fields.status.name)
-                        }}>
-                          {truncateText(issue.fields.status.name, getColumnPixelWidth(getColumnWidthPercent('status')))}
-                        </span>
-                      </AnimatedTooltip>
-                    </div>
-                  </td>
-                  <td style={{ width: `${getColumnWidthPercent('type')}%` }}>
-                    <div style={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap'
-                    }}>
-                      <AnimatedTooltip content={issue.fields.issuetype.name} position="top">
-                        <span className="issue-type-badge" style={{
-                          backgroundColor: getTypeColor(issue.fields.issuetype.name)
-                        }}>
-                          {truncateText(issue.fields.issuetype.name, getColumnPixelWidth(getColumnWidthPercent('type')))}
-                        </span>
-                      </AnimatedTooltip>
-                    </div>
-                  </td>
-                  <td style={{ width: `${getColumnWidthPercent('priority')}%` }}>
-                    <div style={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap'
-                    }}>
-                      {issue.fields.priority ? (
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '100%'
-                        }}>
-                          <AnimatedTooltip content={`Priorytet: ${issue.fields.priority.name}`} position="top">
-                            <span
-                              style={{
-                                fontSize: '16px',
-                                cursor: 'help',
-                                filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))'
-                              }}
-                            >
-                              {getPriorityIcon(issue.fields.priority.name).icon}
-                            </span>
-                          </AnimatedTooltip>
-                        </div>
-                      ) : (
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '100%'
-                        }}>
-                          <AnimatedTooltip content="Brak priorytetu" position="top">
-                            <span
-                              style={{
-                                fontSize: '16px',
-                                cursor: 'help'
-                              }}
-                            >
-                              {getPriorityIcon().icon}
-                            </span>
-                          </AnimatedTooltip>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                  <td style={{ width: `${getColumnWidthPercent('assignee')}%` }}>
-                    <div style={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap'
-                    }}>
-                      {issue.fields.assignee ? (
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '100%'
-                        }}>
-                          <AnimatedTooltip content={issue.fields.assignee.displayName} position="top">
-                            <div
-                              className="assignee-avatar"
-                              style={{
-                                ...getUserAvatarStyle(issue.fields.assignee.displayName),
-                                cursor: 'help'
-                              }}
-                            >
-                              {getInitials(issue.fields.assignee.displayName)}
-                            </div>
-                          </AnimatedTooltip>
-                        </div>
-                      ) : (
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '100%'
-                        }}>
-                          <AnimatedTooltip content="Nieprzypisane" position="top">
-                            <span
-                              style={{
-                                color: 'var(--win11-dark-text-tertiary)',
-                                fontSize: '12px',
-                                cursor: 'help'
-                              }}
-                            >
-                              -
-                            </span>
-                          </AnimatedTooltip>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                  <td style={{
-                    width: `${getColumnWidthPercent('created')}%`,
-                    fontSize: '14px',
-                    color: 'var(--win11-dark-text-secondary)'
-                  }}>
-                    <AnimatedTooltip content={formatDate(issue.fields.created)} position="top">
-                      <div style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap'
-                      }}>
-                        {formatDate(issue.fields.created)}
+                    </td>
+                    <td style={{ width: `${getColumnWidthPercent('key')}%` }}>
+                      <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        paddingLeft: isSubtaskRow ? '12px' : '0' }}>
+                        {isSubtaskRow && <span style={{ color: 'var(--win11-dark-text-tertiary)', marginRight: '4px', fontSize: '10px' }}>└</span>}
+                        <AnimatedTooltip content={rowIssue.key} position="top">
+                          <a
+                            href={`https://${import.meta.env.VITE_JIRA_DOMAIN}/browse/${rowIssue.key}`}
+                            target="_blank" rel="noopener noreferrer" className="issue-key-link"
+                            onClick={e => e.stopPropagation()}
+                          >
+                            {truncateText(rowIssue.key, getColumnPixelWidth(getColumnWidthPercent('key')))}
+                          </a>
+                        </AnimatedTooltip>
+                        {!isSubtaskRow && hasSubtasks && (
+                          <span style={{ marginLeft: '4px', fontSize: '11px', opacity: 0.5, color: 'var(--win11-dark-text-tertiary)' }}>
+                            ({subtasks.length})
+                          </span>
+                        )}
                       </div>
-                    </AnimatedTooltip>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td style={{ width: `${getColumnWidthPercent('summary')}%` }}>
+                      <AnimatedTooltip content={rowIssue.fields.summary} position="top">
+                        <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                          color: 'var(--win11-dark-text-primary)', paddingLeft: isSubtaskRow ? '12px' : '0' }}>
+                          {truncateText(rowIssue.fields.summary, getColumnPixelWidth(getColumnWidthPercent('summary')))}
+                        </div>
+                      </AnimatedTooltip>
+                    </td>
+                    <td style={{ width: `${getColumnWidthPercent('status')}%` }}>
+                      <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <AnimatedTooltip content={rowIssue.fields.status.name} position="top">
+                          <span className="issue-type-badge" style={{ backgroundColor: getStatusColor(rowIssue.fields.status.name) }}>
+                            {truncateText(rowIssue.fields.status.name, getColumnPixelWidth(getColumnWidthPercent('status')))}
+                          </span>
+                        </AnimatedTooltip>
+                      </div>
+                    </td>
+                    <td style={{ width: `${getColumnWidthPercent('type')}%` }}>
+                      <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <AnimatedTooltip content={rowIssue.fields.issuetype.name} position="top">
+                          <span className="issue-type-badge" style={{ backgroundColor: getTypeColor(rowIssue.fields.issuetype.name) }}>
+                            {truncateText(rowIssue.fields.issuetype.name, getColumnPixelWidth(getColumnWidthPercent('type')))}
+                          </span>
+                        </AnimatedTooltip>
+                      </div>
+                    </td>
+                    <td style={{ width: `${getColumnWidthPercent('priority')}%` }}>
+                      <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {rowIssue.fields.priority ? (
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                            <AnimatedTooltip content={`Priorytet: ${rowIssue.fields.priority.name}`} position="top">
+                              <span style={{ fontSize: '16px', cursor: 'help', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))' }}>
+                                {getPriorityIcon(rowIssue.fields.priority.name).icon}
+                              </span>
+                            </AnimatedTooltip>
+                          </div>
+                        ) : (
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                            <AnimatedTooltip content="Brak priorytetu" position="top">
+                              <span style={{ fontSize: '16px', cursor: 'help' }}>{getPriorityIcon().icon}</span>
+                            </AnimatedTooltip>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td style={{ width: `${getColumnWidthPercent('assignee')}%` }}>
+                      <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {rowIssue.fields.assignee ? (
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                            <AnimatedTooltip content={rowIssue.fields.assignee.displayName} position="top">
+                              <div className="assignee-avatar" style={{ ...getUserAvatarStyle(rowIssue.fields.assignee.displayName), cursor: 'help' }}>
+                                {getInitials(rowIssue.fields.assignee.displayName)}
+                              </div>
+                            </AnimatedTooltip>
+                          </div>
+                        ) : (
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                            <AnimatedTooltip content="Nieprzypisane" position="top">
+                              <span style={{ color: 'var(--win11-dark-text-tertiary)', fontSize: '12px', cursor: 'help' }}>-</span>
+                            </AnimatedTooltip>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td style={{ width: `${getColumnWidthPercent('created')}%`, fontSize: '14px', color: 'var(--win11-dark-text-secondary)' }}>
+                      <AnimatedTooltip content={formatDate(rowIssue.fields.created)} position="top">
+                        <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {formatDate(rowIssue.fields.created)}
+                        </div>
+                      </AnimatedTooltip>
+                    </td>
+                  </tr>
+                );
+
+                return (
+                  <React.Fragment key={issue.key}>
+                    {renderIssueRow(issue, groupIndex, false)}
+                    {isExpanded && subtasks.map(subtask => renderIssueRow(subtask, 0, true))}
+                  </React.Fragment>
+                );
+              })}
             </tbody>
           </table>
         </div>
