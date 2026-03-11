@@ -195,6 +195,9 @@ Możliwe ulepszenia:
 - Dashboard dla wielu projektów
 - Historyczne trendy KPI
 
+## 🤝 Deploy to vercel
+npx vercel --prod
+
 ## 🤝 Wsparcie
 
 W przypadku problemów:
