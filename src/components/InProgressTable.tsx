@@ -148,23 +148,17 @@ const TeamTasksTable: React.FC<TeamTasksTableProps> = ({ teamName = "Pixels" }) 
 
   // Helper functions to extract EDD dates from Jira fields
   const getEddStartDate = (issue: JiraIssue): Date | null => {
-    const eddStart = (issue.fields as any).customfield_13587 ||
-                     (issue.fields as any).duedate ||
-                     null;
+    const eddStart = (issue.fields as any).customfield_13587 || null;
     return eddStart ? new Date(eddStart) : null;
   };
 
   const getEtaDevDate = (issue: JiraIssue): Date | null => {
-    const etaDev = (issue.fields as any).customfield_13568 ||
-                   (issue.fields as any).customfield_14219 ||
-                   null;
+    const etaDev = (issue.fields as any).customfield_13568 || null;
     return etaDev ? new Date(etaDev) : null;
   };
 
   const getEddDevDate = (issue: JiraIssue): Date | null => {
-    const eddDev = (issue.fields as any).customfield_14219 ||
-                   (issue.fields as any).customfield_13188 ||
-                   null;
+    const eddDev = (issue.fields as any).customfield_14219 || null;
     return eddDev ? new Date(eddDev) : null;
   };
 
