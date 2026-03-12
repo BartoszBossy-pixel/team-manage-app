@@ -1,57 +1,51 @@
 :root {
-  /* Kozali Design System */
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  line-height: 1.5;
+  /* Windows 11 Fluent Design System */
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.428;
   font-weight: 400;
   font-size: 14px;
 
-  /* Light theme (unused - kept for compat) */
-  --win11-bg-primary: #f0f2f5;
-  --win11-bg-secondary: #f8f9fa;
+  /* Windows 11 Authentic Color Palette */
+  --win11-bg-primary: #f3f3f3;
+  --win11-bg-secondary: #fafafa;
   --win11-bg-tertiary: #ffffff;
-  --win11-surface: rgba(255, 255, 255, 0.8);
-  --win11-surface-stroke: rgba(0, 0, 0, 0.08);
-  --win11-text-primary: #0d0d14;
-  --win11-text-secondary: #4a4a5a;
-  --win11-text-tertiary: #8888a0;
-  --win11-accent: #146EF5;
-  --win11-accent-hover: #2C80FD;
-  --win11-accent-pressed: #0f59cc;
-  --win11-accent-light: rgba(20, 110, 245, 0.12);
-  --win11-success: #2FC862;
-  --win11-warning: #F85900;
-  --win11-error: #FF424D;
-  --win11-info: #146EF5;
-
-  /* Dark theme - Kozali palette */
-  --win11-dark-bg-primary: #0c0c14;
-  --win11-dark-bg-secondary: #0f0f1c;
-  --win11-dark-bg-tertiary: #161625;
-  --win11-dark-surface: rgba(22, 22, 37, 0.9);
-  --win11-dark-surface-stroke: rgba(255, 255, 255, 0.06);
-  --win11-dark-text-primary: #f0f0ff;
-  --win11-dark-text-secondary: rgba(240, 240, 255, 0.55);
-  --win11-dark-text-tertiary: rgba(240, 240, 255, 0.3);
-
-  /* Accent - Kozali Blue */
-  --win11-accent: #146EF5;
-  --win11-accent-hover: #2C80FD;
-  --win11-accent-pressed: #0f59cc;
-  --win11-accent-light: rgba(20, 110, 245, 0.12);
+  --win11-surface: rgba(243, 243, 243, 0.7);
+  --win11-surface-stroke: rgba(0, 0, 0, 0.0578);
+  --win11-text-primary: #323130;
+  --win11-text-secondary: #605e5c;
+  --win11-text-tertiary: #8a8886;
+  --win11-accent: #80b2e3;
+  --win11-accent-hover: #0067c0;
+  --win11-accent-pressed: #004578;
+  --win11-accent-light: rgba(0, 95, 184, 0.1);
+  --win11-success: #0f7b0f;
+  --win11-warning: #9d5d00;
+  --win11-error: #c42b1c;
+  --win11-info: #005fb8;
+  
+  /* Dark theme colors - Windows 11 authentic */
+  --win11-dark-bg-primary: #212121;
+  --win11-dark-bg-secondary: #171717;
+  --win11-dark-bg-tertiary: #2b2b2b;
+  --win11-dark-surface: rgba(32, 32, 32, 0.8);
+  --win11-dark-surface-stroke: rgba(255, 255, 255, 0.0605);
+  --win11-dark-text-primary: #ffffff;
+  --win11-dark-text-secondary: #cccccc;
+  --win11-dark-text-tertiary: #999999;
 
   /* Shadows */
-  --win11-shadow-2: 0px 1px 3px rgba(0, 0, 0, 0.4);
-  --win11-shadow-4: 0px 2px 6px rgba(0, 0, 0, 0.4);
-  --win11-shadow-8: 0px 4px 16px rgba(0, 0, 0, 0.5);
-  --win11-shadow-16: 0px 8px 32px rgba(0, 0, 0, 0.5);
-  --win11-shadow-64: 0px 24px 64px rgba(0, 0, 0, 0.6);
+  --win11-shadow-2: 0px 1px 2px rgba(0, 0, 0, 0.14);
+  --win11-shadow-4: 0px 2px 4px rgba(0, 0, 0, 0.14);
+  --win11-shadow-8: 0px 4px 8px rgba(0, 0, 0, 0.14);
+  --win11-shadow-16: 0px 8px 16px rgba(0, 0, 0, 0.14);
+  --win11-shadow-64: 0px 32px 64px rgba(0, 0, 0, 0.20);
 
-  /* Border radius - Kozali uses clean 6px */
-  --win11-radius-small: 4px;
-  --win11-radius-medium: 6px;
-  --win11-radius-large: 10px;
+  /* Border radius - Windows 11 uses sharp corners */
+  --win11-radius-small: 0px;
+  --win11-radius-medium: 0px;
+  --win11-radius-large: 0px;
 
-  color-scheme: dark;
+  color-scheme: light dark;
   color: var(--win11-dark-text-primary);
   background: var(--win11-dark-bg-primary);
 
@@ -97,8 +91,7 @@ h1 {
   line-height: 36px;
   margin: 0 0 4px 0;
   color: var(--win11-dark-text-primary);
-  font-family: 'Inter', sans-serif;
-  letter-spacing: -0.3px;
+  font-family: 'Segoe UI Variable Display', 'Segoe UI', sans-serif;
 }
 
 h2 {
@@ -107,8 +100,7 @@ h2 {
   line-height: 28px;
   margin: 0 0 6px 0;
   color: var(--win11-dark-text-primary);
-  font-family: 'Inter', sans-serif;
-  letter-spacing: -0.3px;
+  font-family: 'Segoe UI Variable Display', 'Segoe UI', sans-serif;
 }
 
 h3 {
@@ -117,7 +109,7 @@ h3 {
   line-height: 22px;
   margin: 0 0 4px 0;
   color: var(--win11-dark-text-primary);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
 }
 
 h4 {
@@ -126,7 +118,7 @@ h4 {
   line-height: 20px;
   margin: 0 0 2px 0;
   color: var(--win11-dark-text-secondary);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
 }
 
 p {
@@ -134,7 +126,7 @@ p {
   line-height: 20px;
   margin: 0 0 6px 0;
   color: var(--win11-dark-text-secondary);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
 }
 
 button {
@@ -143,7 +135,7 @@ button {
   padding: 3px 8px;
   font-size: 14px;
   font-weight: 400;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
   background: var(--win11-accent);
   color: white;
   cursor: pointer;
@@ -187,7 +179,7 @@ button.secondary:active {
 }
 
 input, select, textarea {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
   font-size: 14px;
   font-weight: 400;
   padding: 4px 8px;
@@ -272,16 +264,14 @@ input::placeholder {
 .dashboard-header {
   text-align: center;
   margin-bottom: 12px;
-  padding: 10px 8px;
-  background: transparent;
-  border-bottom: 1px solid rgba(20, 110, 245, 0.15);
+  padding: 8px;
+  background: var(--win11-dark-surface);
+  /*border: 1px solid var(--win11-dark-surface-stroke);*/
 }
 
 .dashboard-header h1 {
   color: var(--win11-accent);
   margin-bottom: 2px;
-  text-shadow: 0 0 24px rgba(20, 110, 245, 0.4);
-  letter-spacing: -0.5px;
 }
 
 .dashboard-header p {
@@ -300,16 +290,14 @@ input::placeholder {
 }
 
 .kpi-card {
-  background: rgba(22, 22, 37, 0.7);
-  padding: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  background: var(--win11-dark-surface);
+  padding: 8px;
+  /*border: 1px solid var(--win11-dark-surface-stroke);*/
+  transition: background-color 0.1s ease;
 }
 
 .kpi-card:hover {
-  background: rgba(22, 22, 42, 0.85);
-  border-color: rgba(20, 110, 245, 0.2);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .kpi-card .kpi-card:hover {
@@ -393,9 +381,8 @@ input::placeholder {
   text-align: center;
   padding: 16px 12px;
   color: var(--win11-error);
-  background: rgba(255, 66, 77, 0.08);
-  border: 1px solid rgba(255, 66, 77, 0.2);
-  border-radius: 6px;
+  background: rgba(209, 52, 56, 0.1);
+  border: 1px solid rgba(209, 52, 56, 0.2);
   margin: 12px 0;
 }
 
@@ -415,17 +402,17 @@ input::placeholder {
 .refresh-icon-button {
   background: transparent;
   border: none;
-  color: var(--win11-dark-text-tertiary);
+  color: var(--win11-dark-text-secondary);
   cursor: pointer;
   padding: 6px;
-  border-radius: 6px;
-  transition: all 0.15s ease;
+  border-radius: 50%;
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  margin: 0;
+  width: 32px;
+  height: 32px;
+  margin: 12px auto;
 }
 
 .refresh-icon-button i {
@@ -434,9 +421,9 @@ input::placeholder {
 }
 
 .refresh-icon-button:hover {
-  background: rgba(20, 110, 245, 0.12);
-  color: var(--win11-accent);
-  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--win11-dark-text-primary);
+  transform: scale(1.1);
 }
 
 .refresh-icon-button:active {
@@ -481,11 +468,9 @@ input::placeholder {
 .issue-types-list li span:last-child {
   color: var(--win11-accent);
   font-weight: 600;
-  background: rgba(20, 110, 245, 0.1);
-  border-radius: 4px;
+  background: rgba(0, 120, 212, 0.1);
   padding: 2px 6px;
-  font-size: 0.8rem;
-  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
 }
 
 /* Windows 11 Table Styles */
@@ -494,7 +479,7 @@ input::placeholder {
   max-width: 100%; /* Prevent table from exceeding container */
   border-collapse: collapse;
   font-size: 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
   background: rgba(255, 255, 255, 0.0605);
   border: 1px solid rgba(255, 255, 255, 0.1628);
   border-radius: 4px;
@@ -513,7 +498,7 @@ input::placeholder {
   color: var(--win11-dark-text-primary);
   font-size: 14px;
   line-height: 20px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
 }
 
 .team-tasks-table td {
@@ -523,16 +508,16 @@ input::placeholder {
   color: var(--win11-dark-text-secondary);
   font-size: 14px;
   line-height: 20px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
 }
 
 .team-tasks-table tr:nth-child(even) {
-  background: rgba(20, 110, 245, 0.025);
+  background: rgba(255, 255, 255, 0.0326);
 }
 
 .team-tasks-table tr:hover {
-  background: rgba(20, 110, 245, 0.07);
-  transition: background-color 0.12s ease;
+  background: rgba(255, 255, 255, 0.0605);
+  transition: background-color 0.06s ease-in-out;
 }
 
 .team-tasks-table tr.subtask-row {
@@ -586,12 +571,11 @@ a.issue-key-link {
 }
 
 .column-resizer:hover {
-  background: rgba(20, 110, 245, 0.5);
+  background: rgba(0, 95, 184, 0.5);
 }
 
 .column-resizer.resizing {
   background: var(--win11-accent);
-  box-shadow: 0 0 6px rgba(20, 110, 245, 0.5);
 }
 
 /* Specific column width controls for better table layout */
@@ -677,12 +661,12 @@ a.issue-key-link {
   border-radius: 2px;
   font-size: 14px;
   line-height: 20px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
 }
 
 .issue-key-link:hover {
-  color: #7ab4ff;
-  background: rgba(20, 110, 245, 0.18);
+  color: var(--win11-accent-hover);
+  background: rgba(0, 95, 184, 0.15);
 }
 
 .issue-type-badge {
@@ -694,7 +678,7 @@ a.issue-key-link {
   letter-spacing: 0.5px;
   border-radius: 2px;
   line-height: 16px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
 }
 
 .priority-text {
@@ -702,7 +686,7 @@ a.issue-key-link {
   padding: 4px 8px;
   font-size: 14px;
   line-height: 20px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
 }
 
 .assignee-avatar {
@@ -717,7 +701,7 @@ a.issue-key-link {
   font-weight: 600;
   color: white;
   margin-right: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
 }
 
 .days-badge {
@@ -727,14 +711,14 @@ a.issue-key-link {
   font-weight: 400;
   border-radius: 2px;
   line-height: 16px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
 }
 
 .table-container {
   overflow-x: auto;
   margin-top: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1628);
+  border-radius: 4px;
   /* Allow tooltips to escape container boundaries */
   overflow-y: visible;
   max-width: 100%;
@@ -759,7 +743,7 @@ a.issue-key-link {
   color: var(--win11-dark-text-secondary);
   font-weight: 400;
   line-height: 20px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
 }
 
 .empty-state {
@@ -772,7 +756,7 @@ a.issue-key-link {
   background: rgba(255, 255, 255, 0.0605);
   border: 1px solid rgba(255, 255, 255, 0.1628);
   border-radius: 4px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
 }
 
 /* Loading spinner animation */
@@ -788,8 +772,8 @@ a.issue-key-link {
   right: 0;
   width: 30px;
   height: 100vh;
-  background: var(--win11-dark-bg-secondary);
-  border-left: 1px solid rgba(20, 110, 245, 0.12);
+  background: var(--win11-dark-bg-tertiary);
+  border-left: 1px solid var(--win11-dark-surface-stroke);
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -802,31 +786,29 @@ a.issue-key-link {
 .sidebar-item {
   width: 22px;
   height: 22px;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 4px;
+  background: var(--win11-dark-surface);
+  border: 1px solid var(--win11-dark-surface-stroke);
+  border-radius: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.15s ease;
   font-size: 10px;
-  color: var(--win11-dark-text-tertiary);
+  color: var(--win11-dark-text-secondary);
   position: relative;
 }
 
 .sidebar-item:hover {
-  background: rgba(20, 110, 245, 0.15);
-  color: var(--win11-accent);
-  border-color: rgba(20, 110, 245, 0.3);
-  transform: scale(1.05);
+  background: var(--win11-accent);
+  color: white;
+  transform: scale(1.1);
 }
 
 .sidebar-item.active {
   background: var(--win11-accent);
   color: white;
   border-color: var(--win11-accent);
-  box-shadow: 0 0 10px rgba(20, 110, 245, 0.4);
 }
 
 
@@ -835,11 +817,11 @@ a.issue-key-link {
   position: absolute;
   top: 12px;
   right: 12px;
-  width: 26px;
-  height: 26px;
-  background: rgba(10, 10, 20, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -864,7 +846,7 @@ a.issue-key-link {
   color: white;
   border-color: var(--win11-error);
   transform: scale(1.05);
-  box-shadow: 0 0 12px rgba(255, 66, 77, 0.4);
+  box-shadow: 0 2px 8px rgba(196, 43, 28, 0.3);
 }
 
 /* Dashboard with sidebar */
@@ -907,12 +889,12 @@ a.issue-key-link {
 
 
 .filter-panel {
-  background: rgba(12, 12, 22, 0.8);
-  border: 1px solid rgba(20, 110, 245, 0.15);
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
   padding: 12px;
   margin-bottom: 12px;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(10px);
   position: relative;
   z-index: 100;
 }
@@ -932,37 +914,33 @@ a.issue-key-link {
 }
 
 .filter-group label {
-  font-size: 11px;
-  color: var(--win11-dark-text-tertiary);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
+  font-size: 12px;
+  color: var(--win11-dark-text-secondary);
+  font-weight: 500;
 }
 
 .filter-group select,
 .filter-group input {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 4px 6px;
   color: var(--win11-dark-text-primary);
-  font-size: 13px;
-  transition: all 0.15s ease;
-  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
 .filter-group select:focus,
 .filter-group input:focus {
   outline: none;
   border-color: var(--win11-accent);
-  background: rgba(20, 110, 245, 0.06);
-  box-shadow: 0 0 0 3px rgba(20, 110, 245, 0.12);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .filter-group select:hover,
 .filter-group input:hover {
-  border-color: rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 
@@ -973,18 +951,17 @@ a.issue-key-link {
 }
 
 .multiselect-display {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  padding: 4px 8px;
-  padding-right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 4px 6px;
+  padding-right: 18px;
   color: var(--win11-dark-text-primary);
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   user-select: none;
   position: relative;
-  font-family: 'Inter', sans-serif;
 }
 
 .multiselect-display:after {
@@ -998,8 +975,8 @@ a.issue-key-link {
 }
 
 .multiselect-display:hover {
-  border-color: rgba(20, 110, 245, 0.3);
-  background: rgba(20, 110, 245, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .multiselect-options {
@@ -1008,19 +985,19 @@ a.issue-key-link {
   left: 0;
   min-width: 100%;
   width: max-content;
-  background: #0f0f1e;
-  border: 1px solid rgba(20, 110, 245, 0.25);
-  border-radius: 8px;
+  background: var(--win11-dark-bg-secondary);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
   max-height: 250px;
   overflow-y: auto;
   z-index: 10000;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px);
-  transition: all 0.15s ease;
-  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(20, 110, 245, 0.08);
-  backdrop-filter: blur(24px);
-  margin-top: 4px;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  margin-top: 2px;
 }
 
 .multiselect-options.open {
@@ -1034,11 +1011,10 @@ a.issue-key-link {
   align-items: center;
   padding: 6px 10px;
   cursor: pointer;
-  transition: background-color 0.12s ease;
-  font-size: 13px;
+  transition: background-color 0.15s ease;
+  font-size: 14px;
   color: var(--win11-dark-text-primary);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  font-family: 'Inter', sans-serif;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .multiselect-option:last-child {
@@ -1046,14 +1022,13 @@ a.issue-key-link {
 }
 
 .multiselect-option:hover {
-  background: rgba(20, 110, 245, 0.1);
-  color: #7ab4ff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .multiselect-option input[type="checkbox"] {
   margin-right: 6px;
-  width: 13px;
-  height: 13px;
+  width: 14px;
+  height: 14px;
   accent-color: var(--win11-accent);
 }
 
@@ -1074,22 +1049,21 @@ a.issue-key-link {
   bottom: auto;
   left: auto;
   transform: translateX(-50%) translateY(-6px);
-  background: #161625;
+  background: var(--win11-dark-bg-tertiary);
   color: var(--win11-dark-text-primary);
-  padding: 5px 9px;
-  border-radius: 6px;
+  padding: 6px 8px;
+  border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
-  border: 1px solid rgba(20, 110, 245, 0.2);
-  font-family: 'Inter', sans-serif;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(20, 110, 245, 0.08);
+  border: 1px solid var(--win11-dark-surface-stroke);
+  box-shadow: var(--win11-shadow-16);
   z-index: 9999;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(10px);
   max-width: 280px;
   word-wrap: break-word;
   white-space: normal;
@@ -1102,7 +1076,7 @@ a.issue-key-link {
   left: 50%;
   transform: translateX(-50%);
   border: 5px solid transparent;
-  border-top-color: #161625;
+  border-top-color: var(--win11-dark-bg-tertiary);
 }
 
 /* Tooltip visibility is now controlled by JavaScript */
@@ -1114,7 +1088,7 @@ a.issue-key-link {
 
 .animated-tooltip.tooltip-top::after {
   top: 100%;
-  border-top-color: #161625;
+  border-top-color: var(--win11-dark-bg-tertiary);
   border-bottom-color: transparent;
 }
 
@@ -1125,7 +1099,7 @@ a.issue-key-link {
 .animated-tooltip.tooltip-bottom::after {
   bottom: 100%;
   top: auto;
-  border-bottom-color: #161625;
+  border-bottom-color: var(--win11-dark-bg-tertiary);
   border-top-color: transparent;
 }
 
@@ -1138,7 +1112,7 @@ a.issue-key-link {
   left: 100%;
   right: auto;
   transform: translateY(-50%);
-  border-left-color: #161625;
+  border-left-color: var(--win11-dark-bg-tertiary);
   border-right-color: transparent;
   border-top-color: transparent;
   border-bottom-color: transparent;
@@ -1153,7 +1127,7 @@ a.issue-key-link {
   right: 100%;
   left: auto;
   transform: translateY(-50%);
-  border-right-color: #161625;
+  border-right-color: var(--win11-dark-bg-tertiary);
   border-left-color: transparent;
   border-top-color: transparent;
   border-bottom-color: transparent;
@@ -1202,16 +1176,16 @@ a.issue-key-link {
 }
 
 .user-card {
-  background: rgba(22, 22, 37, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 10px;
-  padding: 14px;
-  transition: all 0.2s ease;
+  background: var(--win11-dark-card-bg);
+  border: 1px solid var(--win11-dark-border);
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.3s ease;
 }
 
 .user-card:hover {
-  border-color: rgba(20, 110, 245, 0.4);
-  box-shadow: 0 0 20px rgba(20, 110, 245, 0.12);
+  border-color: var(--win11-accent);
+  box-shadow: 0 4px 12px rgba(0, 95, 184, 0.15);
 }
 
 .user-display {
@@ -1270,22 +1244,19 @@ a.issue-key-link {
 }
 
 .edit-button {
-  background: rgba(20, 110, 245, 0.12);
-  color: var(--win11-accent);
-  border: 1px solid rgba(20, 110, 245, 0.25);
+  background: var(--win11-accent);
+  color: white;
+  border: none;
   border-radius: 6px;
-  padding: 5px 10px;
+  padding: 6px 10px;
   cursor: pointer;
-  transition: all 0.15s ease;
-  font-size: 13px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 14px;
 }
 
 .edit-button:hover {
-  background: var(--win11-accent);
-  color: white;
-  box-shadow: 0 0 12px rgba(20, 110, 245, 0.35);
+  background: #0078d4;
+  transform: translateY(-1px);
 }
 
 /* Edit Form Styles */
@@ -1331,7 +1302,7 @@ a.issue-key-link {
 
 .color-option.selected {
   border-color: #fff;
-  box-shadow: 0 0 0 2px var(--win11-accent), 0 0 10px rgba(20, 110, 245, 0.4);
+  box-shadow: 0 0 0 2px var(--win11-accent);
 }
 
 .form-fields {
@@ -1365,7 +1336,7 @@ a.issue-key-link {
 .form-group input:focus {
   outline: none;
   border-color: var(--win11-accent);
-  box-shadow: 0 0 0 3px rgba(20, 110, 245, 0.15);
+  box-shadow: 0 0 0 2px rgba(0, 95, 184, 0.2);
 }
 
 .form-actions {
@@ -1376,40 +1347,37 @@ a.issue-key-link {
 }
 
 .save-button {
-  background: rgba(47, 200, 98, 0.12);
-  color: #2FC862;
-  border: 1px solid rgba(47, 200, 98, 0.3);
-  border-radius: 6px;
-  padding: 5px 12px;
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .save-button:hover {
-  background: #2FC862;
-  color: white;
-  box-shadow: 0 0 12px rgba(47, 200, 98, 0.3);
+  background: #16a34a;
+  transform: translateY(-1px);
 }
 
 .cancel-button {
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--win11-dark-text-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  padding: 5px 12px;
+  background: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .cancel-button:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--win11-dark-text-primary);
+  background: #4b5563;
+  transform: translateY(-1px);
 }
 
 /* Responsive design for user management */
@@ -1436,13 +1404,13 @@ a.issue-key-link {
   left: 0;
   width: 60px;
   height: 100vh;
-  background: var(--win11-dark-bg-secondary);
-  border-right: 1px solid rgba(20, 110, 245, 0.1);
+  background: var(--win11-dark-card-bg);
+  border-right: 1px solid var(--win11-dark-border);
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 12px 0;
-  gap: 8px;
+  gap: 10px;
   z-index: 1000;
 }
 
@@ -1452,27 +1420,27 @@ a.issue-key-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.15s ease;
-  color: var(--win11-dark-text-tertiary);
+  transition: all 0.3s ease;
+  color: var(--win11-dark-text-secondary);
   font-size: 16px;
 }
 
 .nav-item:hover {
-  background: rgba(20, 110, 245, 0.1);
+  background: rgba(0, 95, 184, 0.1);
   color: var(--win11-accent);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .nav-item.active {
   background: var(--win11-accent);
   color: white;
-  box-shadow: 0 0 18px rgba(20, 110, 245, 0.45);
+  box-shadow: 0 4px 12px rgba(0, 95, 184, 0.3);
 }
 
 .nav-item.active:hover {
-  background: var(--win11-accent-hover);
+  background: #0078d4;
   transform: translateY(-1px);
 }
 
