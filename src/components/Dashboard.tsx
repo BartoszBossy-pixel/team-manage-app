@@ -544,7 +544,7 @@ const Dashboard: React.FC = () => {
 
         {/* Team Tasks Table */}
         {!isCardHidden('inProgress') && (
-          <div className="kpi-card" style={{ position: 'relative' }}>
+          <div className="kpi-card-wrapper">
             <AnimatedTooltip content="Ukryj kafelek" position="right">
               <button
                 className="hide-button"
@@ -559,7 +559,7 @@ const Dashboard: React.FC = () => {
 
         {/* Awaiting Prod Table */}
         {!isCardHidden('awaitingProd') && (
-          <div className="kpi-card" style={{ position: 'relative' }}>
+          <div className="kpi-card-wrapper">
             <AnimatedTooltip content="Ukryj kafelek" position="right">
               <button
                 className="hide-button"
@@ -574,7 +574,7 @@ const Dashboard: React.FC = () => {
 
         {/* To Take Table */}
         {!isCardHidden('toTake') && (
-          <div className="kpi-card" style={{ position: 'relative' }}>
+          <div className="kpi-card-wrapper">
             <AnimatedTooltip content="Ukryj kafelek" position="right">
               <button
                 className="hide-button"
@@ -589,7 +589,7 @@ const Dashboard: React.FC = () => {
 
         {/* More Info Request Table */}
         {!isCardHidden('moreInfoRequest') && (
-          <div className="kpi-card" style={{ position: 'relative' }}>
+          <div className="kpi-card-wrapper">
             <AnimatedTooltip content="Ukryj kafelek" position="right">
               <button
                 className="hide-button"
