@@ -16,6 +16,7 @@ const DevTasksTable: React.FC = () => {
   const env = import.meta.env;
 
   const teamMemberIds = [
+    env.VITE_ID_BARTOSZ,
     env.VITE_ID_ALICJA,
     env.VITE_ID_RAKU,
     env.VITE_ID_TOMEK,
@@ -62,6 +63,7 @@ const DevTasksTable: React.FC = () => {
     }
     // Fallback: env variable names
     const fallback: { id: string; name: string }[] = [];
+    if (env.VITE_ID_BARTOSZ) fallback.push({ id: env.VITE_ID_BARTOSZ, name: 'Bartosz Bossy' });
     if (env.VITE_ID_ALICJA) fallback.push({ id: env.VITE_ID_ALICJA, name: 'Alicja' });
     if (env.VITE_ID_RAKU)   fallback.push({ id: env.VITE_ID_RAKU,   name: 'Raku' });
     if (env.VITE_ID_TOMEK)  fallback.push({ id: env.VITE_ID_TOMEK,  name: 'Tomek' });

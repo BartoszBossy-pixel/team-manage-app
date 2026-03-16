@@ -30,8 +30,8 @@
   --win11-dark-surface: rgba(22, 22, 37, 0.9);
   --win11-dark-surface-stroke: rgba(255, 255, 255, 0.06);
   --win11-dark-text-primary: #f0f0ff;
-  --win11-dark-text-secondary: rgba(240, 240, 255, 0.55);
-  --win11-dark-text-tertiary: rgba(240, 240, 255, 0.3);
+  --win11-dark-text-secondary: rgba(240, 240, 255, 0.80);
+  --win11-dark-text-tertiary: rgba(240, 240, 255, 0.50);
 
   /* Accent - Kozali Blue */
   --win11-accent: #146EF5;
