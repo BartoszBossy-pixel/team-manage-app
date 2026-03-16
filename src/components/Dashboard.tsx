@@ -7,6 +7,8 @@ import AwaitingProdTable from './AwaitingProdTable';
 import ToTakeTable from './ToTakeTable';
 import MoreInfoRequestTable from './MoreInfoRequestTable';
 import AnimatedTooltip from './AnimatedTooltip';
+import DevTasksTable from './DevTasksTable';
+import JiraTimeline from './JiraTimeline';
 
 interface HiddenCards {
   [key: string]: boolean;
@@ -241,6 +243,8 @@ const Dashboard: React.FC = () => {
           </button>
         </AnimatedTooltip>
       </div>
+
+      <DevTasksTable />
 
       <div className="dashboard-grid">
         {/* Distribution Chart */}
@@ -541,6 +545,8 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       )}
+
+        <JiraTimeline />
 
         {/* Team Tasks Table */}
         {!isCardHidden('inProgress') && (
