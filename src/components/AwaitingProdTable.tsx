@@ -95,7 +95,7 @@ const AwaitingProdTable: React.FC<AwaitingProdTableProps> = ({ teamName = "Pixel
       
       // Add team filter
       if (teamName && teamName.toLowerCase() === 'pixels') {
-        jql += ` AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${import.meta.env.VITE_ID_ALICJA},${import.meta.env.VITE_ID_RAKU},${import.meta.env.VITE_ID_TOMEK}, ${import.meta.env.VITE_ID_KRZYSIEK}, ${import.meta.env.VITE_ID_OLIWER}))`;
+        jql += ` AND "Team (GOLD)[Dropdown]"=Pixels`;
       } else if (teamName && teamName.toLowerCase() !== 'all') {
         jql += ` AND ("Team (GOLD)[Dropdown]"="${teamName}")`;
       }

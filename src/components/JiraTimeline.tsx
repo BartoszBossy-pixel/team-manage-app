@@ -103,7 +103,7 @@ const JiraTimeline: React.FC = () => {
     setLoading(true); setError(null);
     try {
       let jql = `project="${env.VITE_GLOBAL_DELIVERY || 'Global Delivery'}"`;
-      jql += ` AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${env.VITE_ID_ALICJA},${env.VITE_ID_RAKU},${env.VITE_ID_TOMEK},${env.VITE_ID_KRZYSIEK},${env.VITE_ID_OLIWER}))`;
+      jql += ' AND "Team (GOLD)[Dropdown]"=Pixels';
       jql += ` AND (status IN ("In development","In progress","In review","More Info Requested Internal","More Info Requested External","Testing"))`;
       jql += ` AND "Platform[Dropdown]" in (SE)`;
       jql += ` ORDER BY assignee ASC, cf[14219] ASC`;

@@ -269,26 +269,7 @@ input::placeholder {
   box-sizing: border-box;
 }
 
-.dashboard-header {
-  text-align: center;
-  margin-bottom: 12px;
-  padding: 10px 8px;
-  background: transparent;
-  border-bottom: 1px solid rgba(20, 110, 245, 0.15);
-}
-
-.dashboard-header h1 {
-  color: var(--win11-accent);
-  margin-bottom: 2px;
-  text-shadow: 0 0 24px rgba(20, 110, 245, 0.4);
-  letter-spacing: -0.5px;
-}
-
-.dashboard-header p {
-  font-size: 1.125rem;
-  color: var(--win11-dark-text-secondary);
-  margin-bottom: 4px;
-}
+.dashboard-header { /* styling handled inline in Dashboard.tsx */ }
 
 .dashboard-grid {
   display: grid;

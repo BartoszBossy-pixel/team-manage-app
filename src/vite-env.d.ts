@@ -14,6 +14,8 @@ interface ImportMetaEnv {
   readonly VITE_API_BASE_URL?: string
   readonly VITE_GLOBAL_DELIVERY?: string
   readonly VITE_TEAM_FIELD_NAME?: string
+  readonly VITE_JIRA_PIXELS_GROUP?: string
+  readonly VITE_ID_BARTOSZ?: string
   readonly VITE_ID_ALICJA?: string
   readonly VITE_ID_RAKU?: string
   readonly VITE_ID_TOMEK?: string

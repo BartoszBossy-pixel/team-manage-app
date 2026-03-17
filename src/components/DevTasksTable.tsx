@@ -4,7 +4,8 @@ import AnimatedTooltip from './AnimatedTooltip';
 import ColumnResizer from './ColumnResizer';
 import { getInitials } from '../utils/avatarUtils';
 import { useUsers } from '../hooks/useUsers';
-import { groupIssuesWithSubtasks, ensureParentsIncluded } from '../utils/subtaskGrouping';
+import { usePixelsTeam } from '../hooks/usePixelsTeam';
+import { groupIssuesWithSubtasks } from '../utils/subtaskGrouping';
 
 const STORAGE_KEY = 'devTasksSelectedDevId';
 
@@ -12,21 +13,20 @@ const DevTasksTable: React.FC = () => {
   const [issues, setIssues] = useState<JiraIssue[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { users, getUserAvatarStyle } = useUsers();
+  const { getUserAvatarStyle } = useUsers();
+  const { members: pixelsTeam } = usePixelsTeam();
   const env = import.meta.env;
 
-  const teamMemberIds = [
-    env.VITE_ID_BARTOSZ,
-    env.VITE_ID_ALICJA,
-    env.VITE_ID_RAKU,
-    env.VITE_ID_TOMEK,
-    env.VITE_ID_KRZYSIEK,
-    env.VITE_ID_OLIWER,
-  ].filter(Boolean);
-
   const [selectedDevId, setSelectedDevId] = useState<string>(() => {
-    return localStorage.getItem(STORAGE_KEY) || teamMemberIds[0] || '';
+    return localStorage.getItem(STORAGE_KEY) || '';
   });
+
+  // Set first team member as default once the list loads
+  useEffect(() => {
+    if (!selectedDevId && pixelsTeam.length > 0) {
+      setSelectedDevId(pixelsTeam[0].accountId);
+    }
+  }, [pixelsTeam, selectedDevId]);
 
   const [expandedParents, setExpandedParents] = useState<Set<string>>(new Set());
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -54,23 +54,10 @@ const DevTasksTable: React.FC = () => {
     return () => document.removeEventListener('mousedown', close);
   }, []);
 
-  // Map ID → display name using users list or fallback env-based names
-  const devOptions = useMemo(() => {
-    if (users.length > 0) {
-      return users
-        .filter(u => teamMemberIds.includes(u.id))
-        .map(u => ({ id: u.id, name: u.displayName }));
-    }
-    // Fallback: env variable names
-    const fallback: { id: string; name: string }[] = [];
-    if (env.VITE_ID_BARTOSZ) fallback.push({ id: env.VITE_ID_BARTOSZ, name: 'Bartosz Bossy' });
-    if (env.VITE_ID_ALICJA) fallback.push({ id: env.VITE_ID_ALICJA, name: 'Alicja' });
-    if (env.VITE_ID_RAKU)   fallback.push({ id: env.VITE_ID_RAKU,   name: 'Raku' });
-    if (env.VITE_ID_TOMEK)  fallback.push({ id: env.VITE_ID_TOMEK,  name: 'Tomek' });
-    if (env.VITE_ID_KRZYSIEK) fallback.push({ id: env.VITE_ID_KRZYSIEK, name: 'Krzysiek' });
-    if (env.VITE_ID_OLIWER) fallback.push({ id: env.VITE_ID_OLIWER, name: 'Oliwer' });
-    return fallback;
-  }, [users]);
+  const devOptions = useMemo(
+    () => pixelsTeam.map(m => ({ id: m.accountId, name: m.displayName })),
+    [pixelsTeam],
+  );
 
   const selectedDevName = devOptions.find(d => d.id === selectedDevId)?.name || 'Wybierz dewelopera';
 

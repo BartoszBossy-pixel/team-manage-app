@@ -8,6 +8,7 @@ import ToTakeTable from './ToTakeTable';
 import MoreInfoRequestTable from './MoreInfoRequestTable';
 import AnimatedTooltip from './AnimatedTooltip';
 import DevTasksTable from './DevTasksTable';
+import headerBg from '../assets/Gemini_Generated_Image_t32oirt32oirt32o.png';
 import JiraTimeline from './JiraTimeline';
 
 interface HiddenCards {
@@ -229,19 +230,52 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className={`dashboard ${Object.values(hiddenCards).some(hidden => hidden) ? 'with-sidebar' : ''}`}>
-      <div className="dashboard-header">
-        <h1><i className="fas fa-rocket"></i> Engineering Team Dashboard</h1>
-        <p>KPI Dashboard - Analiza pracy zespołu deweloperskiego</p>
-        {lastUpdated && (
-          <p style={{ fontSize: '0.875rem', color: 'var(--win11-dark-text-tertiary)', margin: '8px 0 16px 0' }}>
-            Ostatnia aktualizacja: {lastUpdated.toLocaleString('pl-PL')}
+      <div className="dashboard-header" style={{
+        position: 'relative',
+        borderRadius: '12px',
+        overflow: 'hidden',
+        marginBottom: '24px',
+      }}>
+        {/* image at natural aspect ratio — no distortion, no cropping */}
+        <img src={headerBg} alt="" style={{
+          display: 'block',
+          width: '100%',
+          height: 'auto',
+          zIndex: 0,
+        }} />
+        {/* dark gradient overlay so text is readable */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'linear-gradient(to top, rgba(8,8,18,0.88) 0%, rgba(8,8,18,0.30) 60%, rgba(8,8,18,0.05) 100%)',
+        }} />
+        {/* refresh button — top right */}
+        <div style={{ position: 'absolute', top: '14px', right: '16px', zIndex: 2 }}>
+          <AnimatedTooltip content="Odśwież dane" position="bottom">
+            <button onClick={fetchData} className="refresh-icon-button">
+              <i className="fas fa-redo-alt"></i>
+            </button>
+          </AnimatedTooltip>
+        </div>
+        {/* text overlay — bottom center */}
+        <div style={{ position: 'absolute', bottom: '138px', left: 0, right: 0, zIndex: 2, textAlign: 'center' }}>
+          <p style={{
+            margin: 0, fontSize: '15px', fontWeight: 500,
+            color: 'rgba(240,240,255,0.90)',
+            fontFamily: 'Inter, sans-serif',
+            letterSpacing: '0.3px',
+          }}>
+            KPI Dashboard — Analiza pracy zespołu deweloperskiego
           </p>
-        )}
-        <AnimatedTooltip content="Odśwież dane" position="bottom">
-          <button onClick={fetchData} className="refresh-icon-button">
-            <i className="fas fa-redo-alt"></i>
-          </button>
-        </AnimatedTooltip>
+          {lastUpdated && (
+            <p style={{
+              margin: '4px 0 0', fontSize: '12px',
+              color: 'rgba(240,240,255,0.50)',
+              fontFamily: 'Inter, sans-serif',
+            }}>
+              Ostatnia aktualizacja: {lastUpdated.toLocaleString('pl-PL')}
+            </p>
+          )}
+        </div>
       </div>
 
       <DevTasksTable />

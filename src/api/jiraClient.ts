@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getPixelsTeamJql } from '../utils/pixelsTeam';
 
 // TypeScript interfaces for Jira API responses
 export interface JiraIssue {
@@ -123,20 +124,11 @@ class JiraClient {
     }
   }
 
-  // Helper method to get Pixels team filter
+  // Helper method to get Pixels team filter (uses Jira team field — no hardcoded account IDs)
   private getPixelsTeamFilter(): string {
     const env = import.meta.env;
-    // Filtruj tylko istniejące ID (usuń undefined wartości)
-    const teamIds = [env.VITE_ID_ALICJA, env.VITE_ID_RAKU, env.VITE_ID_TOMEK, env.VITE_ID_KRZYSIEK, env.VITE_ID_OLIWER]
-      .filter(id => id && id !== 'undefined' && id.trim() !== '')
-      .join(',');
-    
-    // Jeśli nie ma żadnych ID, użyj tylko filtra zespołu
-    if (!teamIds) {
-      return `project="${env.VITE_GLOBAL_DELIVERY || 'Global Delivery'}" AND "Team (GOLD)[Dropdown]"=Pixels AND "Platform[Dropdown]" in (SE)`;
-    }
-    
-    return `project="${env.VITE_GLOBAL_DELIVERY || 'Global Delivery'}" AND ("Team (GOLD)[Dropdown]"=Pixels OR assignee in(${teamIds})) AND "Platform[Dropdown]" in (SE)`;
+    const project = env.VITE_GLOBAL_DELIVERY || 'Global Delivery';
+    return `project="${project}" AND ${getPixelsTeamJql()} AND "Platform[Dropdown]" in (SE)`;
   }
 
   async fetchProjectIssues(status?: string): Promise<JiraIssue[]> {
@@ -269,69 +261,28 @@ class JiraClient {
 
   async fetchPixelsTeamUsers(): Promise<JiraUser[]> {
     try {
-      // Pobierz zadania zespołu Pixels - używa tej samej metody filtrowania
       const jql = `${this.getPixelsTeamFilter()} AND created >= -180d`;
-      
       console.log(`[fetchPixelsTeamUsers] Fetching team users from: ${jql}`);
-      
+
       const issues = await this.fetchIssues(jql, 500);
-      
-      // Pobierz mapowanie użytkowników do ról projektowych z Jira
-      let userRoleMap: Map<string, string> | null = null;
-      try {
-        userRoleMap = await this.fetchUserProjectRoles();
-      } catch (roleError) {
-        console.warn('[fetchPixelsTeamUsers] Failed to fetch project roles, will use fallback mapping:', roleError);
-      }
-      
-      // Wyciągnij unikalnych użytkowników z assignee
+
       const usersMap = new Map<string, JiraUser>();
-      
-      // Lista znanych członków zespołu Pixels (na podstawie emaili które widziałeś w tabelach)
-      const knownPixelsMembers = [
-        'krzysztof.rak@auctane.com',
-        'alicja.wolnik-kuzminska@auctane.com',
-        'oliwer.pawelski@auctane.com',
-        'tomasz.rusinski@auctane.com',
-        'krzysztof.adamek@auctane.com',
-        'bartosz.bossy@auctane.com'
-      ];
-      
       issues.forEach(issue => {
         if (issue.fields.assignee) {
-          const email = issue.fields.assignee.emailAddress;
-          
-          // Filtruj tylko znanych członków zespołu Pixels
-          if (email && knownPixelsMembers.includes(email.toLowerCase())) {
-            // Pobierz rolę z Project Roles API lub użyj fallback
-            let role: string | undefined;
-            
-            if (userRoleMap && userRoleMap.has(email)) {
-              role = userRoleMap.get(email);
-              console.log(`[fetchPixelsTeamUsers] Found project role for ${email}: ${role}`);
-            } else {
-              // Fallback do starej metody
-              role = this.extractUserRole(issue, email);
-              if (!role) {
-                console.log(`[fetchPixelsTeamUsers] No project role found for ${email}, using fallback mapping`);
-              }
-            }
-            
-            const user: JiraUser = {
-              accountId: issue.fields.assignee.accountId,
-              displayName: issue.fields.assignee.displayName,
-              emailAddress: email,
+          const { accountId, displayName, emailAddress } = issue.fields.assignee;
+          if (accountId && !usersMap.has(accountId)) {
+            usersMap.set(accountId, {
+              accountId,
+              displayName,
+              emailAddress,
               active: true,
-              role: role
-            };
-            usersMap.set(user.accountId, user);
+            });
           }
         }
       });
-      
+
       const users = Array.from(usersMap.values());
-      console.log(`[fetchPixelsTeamUsers] Found ${users.length} Pixels team members (filtered from known list)`);
-      
+      console.log(`[fetchPixelsTeamUsers] Found ${users.length} Pixels team members`);
       return users;
     } catch (error) {
       console.error('Error fetching Pixels team users:', error);
@@ -339,61 +290,8 @@ class JiraClient {
     }
   }
 
-  // Pomocnicza funkcja do wyciągania roli użytkownika z różnych źródeł w Jira
-  private extractUserRole(issue: JiraIssue, userEmail: string): string | undefined {
-    // Sprawdź czy w zadaniu są jakieś custom fields związane z rolą
-    // Możliwe nazwy pól: Role, Position, Job Title, Team Role, etc.
-    
-    // Sprawdź custom fields (mogą być różne numery w zależności od konfiguracji Jira)
-    const fields = issue.fields as any;
-    
-    // Sprawdź popularne nazwy pól dla ról
-    const possibleRoleFields = [
-      'customfield_10010', // Przykładowe custom field ID
-      'customfield_10011',
-      'customfield_10012',
-      'customfield_10020',
-      'Role',
-      'Position',
-      'Job Title',
-      'Team Role',
-      'Developer Role',
-      'User Role'
-    ];
-    
-    for (const fieldName of possibleRoleFields) {
-      if (fields[fieldName]) {
-        const fieldValue = fields[fieldName];
-        // Jeśli to string, zwróć bezpośrednio
-        if (typeof fieldValue === 'string' && fieldValue.trim()) {
-          console.log(`[extractUserRole] Found role in field ${fieldName}: ${fieldValue}`);
-          return fieldValue.trim();
-        }
-        // Jeśli to obiekt z value lub name
-        if (typeof fieldValue === 'object' && fieldValue.value) {
-          console.log(`[extractUserRole] Found role in field ${fieldName}.value: ${fieldValue.value}`);
-          return fieldValue.value;
-        }
-        if (typeof fieldValue === 'object' && fieldValue.name) {
-          console.log(`[extractUserRole] Found role in field ${fieldName}.name: ${fieldValue.name}`);
-          return fieldValue.name;
-        }
-      }
-    }
-    
-    // Jeśli nie znaleziono roli w polach, spróbuj wyciągnąć z opisu zadania
-    if (fields.description && typeof fields.description === 'string') {
-      const roleMatch = fields.description.match(/role:\s*([^\n\r,]+)/i);
-      if (roleMatch) {
-        console.log(`[extractUserRole] Found role in description: ${roleMatch[1].trim()}`);
-        return roleMatch[1].trim();
-      }
-    }
-    
-    console.log(`[extractUserRole] No role found for user ${userEmail}`);
-    return undefined;
-  }
 }
+
 
 // Factory function to create Jira client with environment variables
 export const createJiraClient = (): JiraClient => {
