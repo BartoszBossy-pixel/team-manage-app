@@ -17,11 +17,9 @@ const DevTasksTable: React.FC = () => {
   const { members: pixelsTeam } = usePixelsTeam();
   const env = import.meta.env;
 
-  const [selectedDevId, setSelectedDevId] = useState<string>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored === null) { localStorage.setItem(STORAGE_KEY, ''); return ''; }
-    return stored;
-  });
+  const [selectedDevId, setSelectedDevId] = useState<string>(
+    () => localStorage.getItem(STORAGE_KEY) || ''
+  );
 
   // Set first team member as default once the list loads
   useEffect(() => {

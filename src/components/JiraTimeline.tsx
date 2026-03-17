@@ -91,16 +91,12 @@ const JiraTimeline: React.FC = () => {
   const [todoIssues, setTodoIssues] = useState<JiraIssue[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showDevelopment, setShowDevelopment] = useState(() => {
-    const stored = localStorage.getItem('timeline.showDevelopment');
-    if (stored === null) { localStorage.setItem('timeline.showDevelopment', 'true'); return true; }
-    return stored !== 'false';
-  });
-  const [showBugs, setShowBugs] = useState(() => {
-    const stored = localStorage.getItem('timeline.showBugs');
-    if (stored === null) { localStorage.setItem('timeline.showBugs', 'true'); return true; }
-    return stored !== 'false';
-  });
+  const [showDevelopment, setShowDevelopment] = useState(
+    () => localStorage.getItem('timeline.showDevelopment') !== 'false'
+  );
+  const [showBugs, setShowBugs] = useState(
+    () => localStorage.getItem('timeline.showBugs') !== 'false'
+  );
   const env = import.meta.env;
 
   // ── timeline bounds ────────────────────────────────────────────────────────

@@ -38,11 +38,7 @@ const Dashboard: React.FC = () => {
   const [hiddenCards, setHiddenCards] = useState<HiddenCards>(() => {
     try {
       const saved = localStorage.getItem('dashboard-hidden-cards');
-      if (saved === null) {
-        localStorage.setItem('dashboard-hidden-cards', '{}');
-        return {};
-      }
-      return JSON.parse(saved);
+      return saved ? JSON.parse(saved) : {};
     } catch (error) {
       console.warn('Failed to load hidden cards from localStorage:', error);
       return {};
