@@ -1,8 +1,8 @@
 # Dependencies
 node_modules/
 
-# Environment variables (never commit!)
-.env
+# Environment variables
+# .env is committed but contains only placeholders — real secrets go in .env.local (gitignored)
 .env.local
 .env.production
 
