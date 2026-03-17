@@ -113,8 +113,6 @@ const TeamTasksTable: React.FC<TeamTasksTableProps> = ({ teamName = "Pixels" }) 
 
       // Use the general search endpoint with optimized parameters
       const response = await fetch(`${env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/jira-search?` + new URLSearchParams({
-        domain: env.VITE_JIRA_DOMAIN || '',
-        auth: btoa(`${env.VITE_JIRA_EMAIL || ''}:${env.VITE_JIRA_API_TOKEN || ''}`),
         jql: jql,
         maxResults: '50'
       }));

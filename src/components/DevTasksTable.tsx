@@ -75,8 +75,6 @@ const DevTasksTable: React.FC = () => {
       const response = await fetch(
         `${env.VITE_API_BASE_URL || 'http://localhost:3001'}/api/jira-search?` +
         new URLSearchParams({
-          domain: env.VITE_JIRA_DOMAIN || '',
-          auth: btoa(`${env.VITE_JIRA_EMAIL || ''}:${env.VITE_JIRA_API_TOKEN || ''}`),
           jql,
           maxResults: '50',
         })

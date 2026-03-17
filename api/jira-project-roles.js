@@ -16,11 +16,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { projectKey, domain, auth } = req.query;
+    const { projectKey } = req.query;
+    const domain = process.env.JIRA_DOMAIN;
+    const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_TOKEN}`).toString('base64');
 
-    if (!projectKey || !domain || !auth) {
+    if (!projectKey) {
       return res.status(400).json({
-        error: 'Missing required parameters: projectKey, domain and auth are required'
+        error: 'Missing required parameter: projectKey is required'
       });
     }
 

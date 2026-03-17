@@ -9,11 +9,13 @@ export default async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { groupname, domain, auth } = req.query;
+    const { groupname } = req.query;
+    const domain = process.env.JIRA_DOMAIN;
+    const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_TOKEN}`).toString('base64');
 
-    if (!groupname || !domain || !auth) {
+    if (!groupname) {
       return res.status(400).json({
-        error: 'Missing required parameters: groupname, domain and auth are required'
+        error: 'Missing required parameter: groupname is required'
       });
     }
 

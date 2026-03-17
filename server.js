@@ -1,4 +1,6 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+dotenv.config();                              // .env (defaults/placeholders)
+dotenv.config({ path: '.env.local', override: true }); // .env.local (real secrets, gitignored)
 import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
@@ -24,11 +26,19 @@ app.get('/health', (req, res) => {
 // Jira search endpoint
 app.get('/api/jira-search', async (req, res) => {
   try {
-    const { jql, maxResults = 100, domain, auth } = req.query;
+    const { jql, maxResults = 100 } = req.query;
+    const domain = process.env.JIRA_DOMAIN;
+    const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_TOKEN}`).toString('base64');
 
-    if (!jql || !domain || !auth) {
-      return res.status(400).json({ 
-        error: 'Missing required parameters: jql, domain, and auth are required' 
+    if (!jql) {
+      return res.status(400).json({
+        error: 'Missing required parameter: jql is required'
+      });
+    }
+
+    if (!domain || !process.env.JIRA_EMAIL || !process.env.JIRA_API_TOKEN) {
+      return res.status(500).json({
+        error: 'Jira credentials not configured on server'
       });
     }
 
@@ -96,13 +106,8 @@ app.get('/api/jira-search', async (req, res) => {
 app.get('/api/jira-project/:projectKey', async (req, res) => {
   try {
     const { projectKey } = req.params;
-    const { domain, auth } = req.query;
-
-    if (!domain || !auth) {
-      return res.status(400).json({ 
-        error: 'Missing required parameters: domain and auth are required' 
-      });
-    }
+    const domain = process.env.JIRA_DOMAIN;
+    const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_TOKEN}`).toString('base64');
 
     const response = await axios.get(`https://${domain}/rest/api/3/project/${projectKey}`, {
       headers: {
@@ -132,13 +137,8 @@ app.get('/api/jira-project/:projectKey', async (req, res) => {
 // Get issue types for the project
 app.get('/api/jira-issue-types', async (req, res) => {
   try {
-    const { domain, auth } = req.query;
-
-    if (!domain || !auth) {
-      return res.status(400).json({ 
-        error: 'Missing required parameters: domain and auth are required' 
-      });
-    }
+    const domain = process.env.JIRA_DOMAIN;
+    const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_TOKEN}`).toString('base64');
 
     const response = await axios.get(`https://${domain}/rest/api/3/issuetype`, {
       headers: {
@@ -161,11 +161,13 @@ app.get('/api/jira-issue-types', async (req, res) => {
 // Get all team issues (all statuses)
 app.get('/api/jira-in-progress', async (req, res) => {
   try {
-    const { domain, auth, projectKey, team } = req.query;
+    const { projectKey, team } = req.query;
+    const domain = process.env.JIRA_DOMAIN;
+    const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_TOKEN}`).toString('base64');
 
-    if (!domain || !auth || !projectKey) {
+    if (!projectKey) {
       return res.status(400).json({
-        error: 'Missing required parameters: domain, auth, and projectKey are required'
+        error: 'Missing required parameter: projectKey is required'
       });
     }
 
@@ -217,11 +219,13 @@ app.get('/api/jira-in-progress', async (req, res) => {
 // Get project roles
 app.get('/api/jira-project-roles', async (req, res) => {
   try {
-    const { projectKey, domain, auth } = req.query;
+    const { projectKey } = req.query;
+    const domain = process.env.JIRA_DOMAIN;
+    const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_TOKEN}`).toString('base64');
 
-    if (!projectKey || !domain || !auth) {
+    if (!projectKey) {
       return res.status(400).json({
-        error: 'Missing required parameters: projectKey, domain and auth are required'
+        error: 'Missing required parameter: projectKey is required'
       });
     }
 
@@ -265,11 +269,13 @@ app.get('/api/jira-project-roles', async (req, res) => {
 // Get specific project role details
 app.get('/api/jira-project-role', async (req, res) => {
   try {
-    const { projectKey, roleId, domain, auth } = req.query;
+    const { projectKey, roleId } = req.query;
+    const domain = process.env.JIRA_DOMAIN;
+    const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_TOKEN}`).toString('base64');
 
-    if (!projectKey || !roleId || !domain || !auth) {
+    if (!projectKey || !roleId) {
       return res.status(400).json({
-        error: 'Missing required parameters: projectKey, roleId, domain and auth are required'
+        error: 'Missing required parameters: projectKey and roleId are required'
       });
     }
 
@@ -314,11 +320,13 @@ app.get('/api/jira-project-role', async (req, res) => {
 // Jira Group Members endpoint — returns members of a specific Jira group
 app.get('/api/jira-group-members', async (req, res) => {
   try {
-    const { groupname, domain, auth } = req.query;
+    const { groupname } = req.query;
+    const domain = process.env.JIRA_DOMAIN;
+    const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_TOKEN}`).toString('base64');
 
-    if (!groupname || !domain || !auth) {
+    if (!groupname) {
       return res.status(400).json({
-        error: 'Missing required parameters: groupname, domain and auth are required'
+        error: 'Missing required parameter: groupname is required'
       });
     }
 

@@ -111,8 +111,6 @@ const MoreInfoRequestTable: React.FC<MoreInfoRequestTableProps> = ({ teamName = 
 
       // Use the general search endpoint
       const params = new URLSearchParams({
-        domain: import.meta.env.VITE_JIRA_DOMAIN || '',
-        auth: btoa(`${import.meta.env.VITE_JIRA_EMAIL || ''}:${import.meta.env.VITE_JIRA_API_TOKEN || ''}`),
         jql: jql,
         maxResults: '100'
       });

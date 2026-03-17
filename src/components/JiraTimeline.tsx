@@ -119,8 +119,6 @@ const JiraTimeline: React.FC = () => {
 
   // ── fetch ──────────────────────────────────────────────────────────────────
   const buildParams = (jql: string) => new URLSearchParams({
-    domain: env.VITE_JIRA_DOMAIN || '',
-    auth: btoa(`${env.VITE_JIRA_EMAIL || ''}:${env.VITE_JIRA_API_TOKEN || ''}`),
     jql, maxResults: '100',
   });
 

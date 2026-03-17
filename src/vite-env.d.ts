@@ -7,9 +7,7 @@ interface ImportMetaEnv {
   readonly VITE_AWS_SECRET_ACCESS_KEY?: string
   readonly VITE_DYNAMODB_USERS_TABLE?: string
   readonly VITE_DYNAMODB_USER_SETTINGS_TABLE?: string
-  readonly VITE_JIRA_API_TOKEN?: string
   readonly VITE_JIRA_DOMAIN?: string
-  readonly VITE_JIRA_EMAIL?: string
   readonly VITE_JIRA_PROJECT_KEY?: string
   readonly VITE_API_BASE_URL?: string
   readonly VITE_GLOBAL_DELIVERY?: string

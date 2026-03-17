@@ -86,9 +86,6 @@ export interface JiraSearchResponse {
 }
 
 export interface JiraClientConfig {
-  domain: string;
-  email: string;
-  apiToken: string;
   projectKey: string;
 }
 
@@ -101,19 +98,12 @@ class JiraClient {
     this.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
   }
 
-  private getAuthHeader(): string {
-    const credentials = `${this.config.email}:${this.config.apiToken}`;
-    return btoa(credentials);
-  }
-
   async fetchIssues(jql: string, maxResults: number = 100): Promise<JiraIssue[]> {
     try {
       const response = await axios.get<JiraSearchResponse>(`${this.baseURL}/api/jira-search`, {
         params: {
           jql,
           maxResults,
-          domain: this.config.domain,
-          auth: this.getAuthHeader()
         }
       });
       
@@ -126,8 +116,7 @@ class JiraClient {
 
   // Helper method to get Pixels team filter (uses Jira team field — no hardcoded account IDs)
   private getPixelsTeamFilter(): string {
-    const env = import.meta.env;
-    const project = env.VITE_GLOBAL_DELIVERY || 'Global Delivery';
+    const project = import.meta.env.VITE_GLOBAL_DELIVERY || 'Global Delivery';
     return `project="${project}" AND ${getPixelsTeamJql()} AND "Platform[Dropdown]" in (SE)`;
   }
 
@@ -178,8 +167,6 @@ class JiraClient {
       const response = await axios.get<JiraProjectRolesResponse>(`${this.baseURL}/api/jira-project-roles`, {
         params: {
           projectKey: this.config.projectKey,
-          domain: this.config.domain,
-          auth: this.getAuthHeader()
         }
       });
       
@@ -198,8 +185,6 @@ class JiraClient {
         params: {
           projectKey: this.config.projectKey,
           roleId: roleId,
-          domain: this.config.domain,
-          auth: this.getAuthHeader()
         }
       });
       
@@ -295,18 +280,9 @@ class JiraClient {
 
 // Factory function to create Jira client with environment variables
 export const createJiraClient = (): JiraClient => {
-  const env = import.meta.env;
   const config: JiraClientConfig = {
-    domain: env.VITE_JIRA_DOMAIN || '',
-    email: env.VITE_JIRA_EMAIL || '',
-    apiToken: env.VITE_JIRA_API_TOKEN || '',
-    projectKey: env.VITE_JIRA_PROJECT_KEY || ''
+    projectKey: import.meta.env.VITE_JIRA_PROJECT_KEY || '',
   };
-
-  if (!config.domain || !config.email || !config.apiToken || !config.projectKey) {
-    throw new Error('Missing Jira configuration. Please check your environment variables.');
-  }
-
   return new JiraClient(config);
 };
 

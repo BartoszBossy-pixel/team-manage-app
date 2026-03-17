@@ -16,13 +16,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { domain, auth } = req.query;
-
-    if (!domain || !auth) {
-      return res.status(400).json({ 
-        error: 'Missing required parameters: domain and auth are required' 
-      });
-    }
+    const domain = process.env.JIRA_DOMAIN;
+    const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_TOKEN}`).toString('base64');
 
     const response = await axios.get(`https://${domain}/rest/api/3/issuetype`, {
       headers: {

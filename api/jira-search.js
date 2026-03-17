@@ -16,11 +16,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { jql, maxResults = 100, domain, auth } = req.query;
+    const { jql, maxResults = 100 } = req.query;
+    const domain = process.env.JIRA_DOMAIN;
+    const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_TOKEN}`).toString('base64');
 
-    if (!jql || !domain || !auth) {
-      return res.status(400).json({ 
-        error: 'Missing required parameters: jql, domain, and auth are required' 
+    if (!jql) {
+      return res.status(400).json({
+        error: 'Missing required parameter: jql is required'
+      });
+    }
+
+    if (!domain || !process.env.JIRA_EMAIL || !process.env.JIRA_API_TOKEN) {
+      return res.status(500).json({
+        error: 'Jira credentials not configured on server'
       });
     }
 
