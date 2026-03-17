@@ -35,19 +35,17 @@ app.get('/api/jira-search', async (req, res) => {
     console.log(`Fetching Jira issues with JQL: ${jql}`);
     console.log(`Domain: ${domain}`);
 
-    const response = await axios.get(`https://${domain}/rest/api/3/search/jql`, {
-      params: {
-        jql,
-        maxResults,
-        fields: 'key,issuetype,created,status,summary,priority,assignee,parent,customfield_13587,customfield_13568,customfield_14219,customfield_13188',
-        expand: '' // Don't expand any additional data
-      },
+    const response = await axios.post(`https://${domain}/rest/api/3/search/jql`, {
+      jql,
+      maxResults: parseInt(maxResults),
+      fields: ['key','issuetype','created','status','statuscategorychangedate','summary','priority','assignee','parent','labels','customfield_13587','customfield_13568','customfield_14219','customfield_13188'],
+    }, {
       headers: {
         'Authorization': `Basic ${auth}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      timeout: 15000 // Reduced timeout from 30s to 15s
+      timeout: 15000
     });
 
     console.log(`Successfully fetched ${response.data.issues.length} issues`);
@@ -182,19 +180,17 @@ app.get('/api/jira-in-progress', async (req, res) => {
       jql += ` AND (Team = "${team}" OR "Team (GOLD)" = "${team}" OR component = "${team}" OR "Development Team" = "${team}" OR labels = "${team}")`;
     }
 
-    const response = await axios.get(`https://${domain}/rest/api/3/search/jql`, {
-      params: {
-        jql,
-        maxResults: 50,
-        fields: 'key,issuetype,created,status,summary,priority,assignee,parent,customfield_13587,customfield_13568,customfield_14219,customfield_13188',
-        expand: '' // Don't expand any additional data
-      },
+    const response = await axios.post(`https://${domain}/rest/api/3/search/jql`, {
+      jql,
+      maxResults: 50,
+      fields: ['key','issuetype','created','status','statuscategorychangedate','summary','priority','assignee','parent','labels','customfield_13587','customfield_13568','customfield_14219','customfield_13188'],
+    }, {
       headers: {
         'Authorization': `Basic ${auth}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      timeout: 15000 // Reduced timeout from 30s to 15s
+      timeout: 15000
     });
 
     console.log(`Successfully fetched ${response.data.issues.length} team issues`);

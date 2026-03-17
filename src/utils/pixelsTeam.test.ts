@@ -35,17 +35,18 @@ describe('fetchPixelsTeamMembers', () => {
     vi.restoreAllMocks();
   });
 
-  it('extracts unique members from issue assignees', async () => {
-    const mockIssues = [
-      { fields: { assignee: { accountId: 'acc-1', displayName: 'Alice', emailAddress: 'alice@test.com' } } },
-      { fields: { assignee: { accountId: 'acc-2', displayName: 'Bob', emailAddress: 'bob@test.com' } } },
-      { fields: { assignee: { accountId: 'acc-1', displayName: 'Alice', emailAddress: 'alice@test.com' } } }, // duplicate
-      { fields: { assignee: null } }, // no assignee
+  // VITE_JIRA_PIXELS_GROUP is set, so the primary path is the Jira Group API.
+  // Mock responses must return { members: [...] } format (group API response).
+
+  it('returns members from the Jira group API', async () => {
+    const mockMembers = [
+      { accountId: 'acc-1', displayName: 'Alice', emailAddress: 'alice@test.com', active: true },
+      { accountId: 'acc-2', displayName: 'Bob', emailAddress: 'bob@test.com', active: true },
     ];
 
     vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ issues: mockIssues }),
+      json: async () => ({ members: mockMembers }),
     }));
 
     const members = await fetchPixelsTeamMembers();
@@ -53,16 +54,17 @@ describe('fetchPixelsTeamMembers', () => {
     expect(members.map(m => m.accountId)).toEqual(['acc-1', 'acc-2']);
   });
 
-  it('throws when HTTP response is not ok', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce({ ok: false, status: 401 }));
+  it('throws when both group API and fallback return HTTP error', async () => {
+    // Both group API and issue-scan fallback return 401
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 401 }));
     await expect(fetchPixelsTeamMembers()).rejects.toThrow('HTTP 401');
   });
 
   it('returns cached result on second call without re-fetching', async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ issues: [
-        { fields: { assignee: { accountId: 'acc-1', displayName: 'Alice' } } },
+      json: async () => ({ members: [
+        { accountId: 'acc-1', displayName: 'Alice', emailAddress: 'alice@test.com', active: true },
       ]}),
     });
     vi.stubGlobal('fetch', mockFetch);

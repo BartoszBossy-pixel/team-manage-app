@@ -109,13 +109,6 @@ const ToTakeTable: React.FC<ToTakeTableProps> = ({ teamName = "Pixels" }) => {
       // Add sorting
       jql += ` ORDER BY cf[14219] ASC, assignee ASC, status ASC`;
 
-      console.log('=== DEBUG FETCH TO TAKE ISSUES ===');
-      console.log('JQL Query:', jql);
-      console.log('API Base URL:', import.meta.env.VITE_API_BASE_URL);
-      console.log('Jira Domain:', import.meta.env.VITE_JIRA_DOMAIN);
-      console.log('Jira Email:', import.meta.env.VITE_JIRA_EMAIL);
-      console.log('Has API Token:', !!import.meta.env.VITE_JIRA_API_TOKEN);
-
       // Use the general search endpoint
       const params = new URLSearchParams({
         domain: import.meta.env.VITE_JIRA_DOMAIN || '',
@@ -123,24 +116,16 @@ const ToTakeTable: React.FC<ToTakeTableProps> = ({ teamName = "Pixels" }) => {
         jql: jql,
         maxResults: '100'
       });
-      
-      const apiUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001'}/api/jira-search?${params}`;
-      console.log('Full API URL:', apiUrl);
-      
-      const response = await fetch(apiUrl);
 
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
+      const apiUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001'}/api/jira-search?${params}`;
+      const response = await fetch(apiUrl);
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('API Error Response:', errorText);
         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
 
       const data = await response.json();
-      console.log('API Response data:', data);
-      console.log('Issues count:', data.issues?.length || 0);
       
       const issuesData = data.issues || [];
       

@@ -7,6 +7,7 @@ interface AnimatedTooltipProps {
   children: ReactNode;
   className?: string;
   disabled?: boolean;
+  style?: React.CSSProperties;
 }
 
 // Global state to track active tooltip
@@ -18,7 +19,8 @@ const AnimatedTooltip: React.FC<AnimatedTooltipProps> = ({
   position = 'top',
   children,
   className = '',
-  disabled = false
+  disabled = false,
+  style,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -150,6 +152,7 @@ const AnimatedTooltip: React.FC<AnimatedTooltipProps> = ({
       <div
         ref={containerRef}
         className={`tooltip-container ${className}`}
+        style={style}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >

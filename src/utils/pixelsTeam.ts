@@ -33,9 +33,7 @@ async function fetchMembersFromGroup(env: ImportMetaEnv): Promise<PixelsMember[]
       auth: btoa(`${env.VITE_JIRA_EMAIL || ''}:${env.VITE_JIRA_API_TOKEN || ''}`),
     });
 
-  console.log('[pixelsTeam] fetchMembersFromGroup URL:', url.toString());
   const res = await fetch(url);
-  console.log('[pixelsTeam] fetchMembersFromGroup status:', res.status, res.headers.get('content-type'));
   if (!res.ok) {
     const body = await res.text();
     console.error('[pixelsTeam] fetchMembersFromGroup error body:', body.slice(0, 200));
@@ -93,19 +91,15 @@ export async function fetchPixelsTeamMembers(): Promise<PixelsMember[]> {
   const env = import.meta.env;
   let members: PixelsMember[];
 
-  console.log('[pixelsTeam] VITE_JIRA_PIXELS_GROUP =', JSON.stringify(env.VITE_JIRA_PIXELS_GROUP));
-
   if (env.VITE_JIRA_PIXELS_GROUP) {
     try {
       members = await fetchMembersFromGroup(env);
-      console.log(`[pixelsTeam] Loaded ${members.length} members from Jira group '${env.VITE_JIRA_PIXELS_GROUP}'`);
     } catch (e) {
       console.error('[pixelsTeam] Group API failed, falling back to issue scan. Error:', e);
       members = await fetchMembersFromIssues(env);
     }
   } else {
     members = await fetchMembersFromIssues(env);
-    console.log(`[pixelsTeam] Loaded ${members.length} members from issue assignees (no group configured)`);
   }
 
   _cache = members;
