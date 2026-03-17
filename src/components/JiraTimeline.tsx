@@ -61,7 +61,7 @@ interface DevRow {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const WEEKS_BEFORE = 2;
-const WEEKS_TOTAL  = 16;
+const WEEKS_TOTAL  = 20;
 const LANE_H       = 28;   // px per task lane
 const ROW_LABEL_W  = 120;  // px
 
