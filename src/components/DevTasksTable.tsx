@@ -18,7 +18,9 @@ const DevTasksTable: React.FC = () => {
   const env = import.meta.env;
 
   const [selectedDevId, setSelectedDevId] = useState<string>(() => {
-    return localStorage.getItem(STORAGE_KEY) || '';
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === null) { localStorage.setItem(STORAGE_KEY, ''); return ''; }
+    return stored;
   });
 
   // Set first team member as default once the list loads

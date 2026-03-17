@@ -91,7 +91,16 @@ const JiraTimeline: React.FC = () => {
   const [todoIssues, setTodoIssues] = useState<JiraIssue[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showDevelopment, setShowDevelopment] = useState(true);
+  const [showDevelopment, setShowDevelopment] = useState(() => {
+    const stored = localStorage.getItem('timeline.showDevelopment');
+    if (stored === null) { localStorage.setItem('timeline.showDevelopment', 'true'); return true; }
+    return stored !== 'false';
+  });
+  const [showBugs, setShowBugs] = useState(() => {
+    const stored = localStorage.getItem('timeline.showBugs');
+    if (stored === null) { localStorage.setItem('timeline.showBugs', 'true'); return true; }
+    return stored !== 'false';
+  });
   const env = import.meta.env;
 
   // ── timeline bounds ────────────────────────────────────────────────────────
@@ -347,6 +356,9 @@ const JiraTimeline: React.FC = () => {
           if (!showDevelopment && task.issue.fields.issuetype.name.toLowerCase().includes('development')) {
             return null;
           }
+          if (!showBugs && task.issue.fields.issuetype.name.toLowerCase() === 'bug') {
+            return null;
+          }
           const leftPct  = (task.startDay / totalDays) * 100;
           const rightPct = ((task.startDay + task.durationDays) / totalDays) * 100;
           const top      = 4 + task.lane * LANE_H;
@@ -571,10 +583,21 @@ const JiraTimeline: React.FC = () => {
             <input
               type="checkbox"
               checked={showDevelopment}
-              onChange={e => setShowDevelopment(e.target.checked)}
+              onChange={e => { setShowDevelopment(e.target.checked); localStorage.setItem('timeline.showDevelopment', String(e.target.checked)); }}
               style={{ accentColor: 'var(--win11-accent)', width: '14px', height: '14px', cursor: 'pointer' }}
             />
             Pokaż zadania typu Development
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer',
+            fontSize: '12px', color: 'var(--win11-dark-text-secondary)', fontFamily: 'Inter, sans-serif',
+            userSelect: 'none' }}>
+            <input
+              type="checkbox"
+              checked={showBugs}
+              onChange={e => { setShowBugs(e.target.checked); localStorage.setItem('timeline.showBugs', String(e.target.checked)); }}
+              style={{ accentColor: 'var(--win11-accent)', width: '14px', height: '14px', cursor: 'pointer' }}
+            />
+            Pokaż bugi
           </label>
         </div>
       )}

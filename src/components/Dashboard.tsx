@@ -38,7 +38,11 @@ const Dashboard: React.FC = () => {
   const [hiddenCards, setHiddenCards] = useState<HiddenCards>(() => {
     try {
       const saved = localStorage.getItem('dashboard-hidden-cards');
-      return saved ? JSON.parse(saved) : {};
+      if (saved === null) {
+        localStorage.setItem('dashboard-hidden-cards', '{}');
+        return {};
+      }
+      return JSON.parse(saved);
     } catch (error) {
       console.warn('Failed to load hidden cards from localStorage:', error);
       return {};
@@ -103,9 +107,8 @@ const Dashboard: React.FC = () => {
       const calculatedKpis = calculateKPIs(allIssues, completedIssues);
       
       // Override EDD delivery metrics with Pixels-specific data
-      const pixelsEDDMetrics = kpiEngine.calculateEDDDeliveryMetrics(pixelsCompletedIssues);
-      calculatedKpis.eddDeliveryMetrics = pixelsEDDMetrics;
-      
+      calculatedKpis.eddDeliveryMetrics = kpiEngine.calculateEDDDeliveryMetrics(pixelsCompletedIssues);
+
       setKpis(calculatedKpis);
       setLastUpdated(new Date());
     } catch (err) {
