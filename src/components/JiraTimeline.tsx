@@ -179,15 +179,22 @@ const JiraTimeline: React.FC = () => {
         // Start: actual In-Progress date → ETA Dev (planned dev start) → today
         // Only use statuscategorychangedate when it is earlier than the end date
         // (guards against a recently-reopened task collapsing the bar to 1 day).
+        // When there's no EDD Dev and statusDate is before timeline start, fall back to today
+        // (prevents bars from being rendered entirely off-screen to the left).
         const statusDate    = inProgressDate ? new Date(inProgressDate) : null;
         const useStatusDate = statusDate !== null && (end === null || statusDate < end);
 
-        const start      = useStatusDate ? statusDate!
-                         : etaDev        ? new Date(etaDev)
-                         : today;
-        const startLabel = useStatusDate ? 'In Progress od'
-                         : etaDev        ? 'ETA Dev'
-                         : 'Dziś (brak dat)';
+        const rawStart = useStatusDate ? statusDate!
+                       : etaDev        ? new Date(etaDev)
+                       : today;
+        // If no hard deadline and the computed start is before the timeline window, anchor to today
+        // (prevents bars from being rendered entirely off-screen to the left).
+        const anchoredToToday = !end && rawStart < timelineStart;
+        const start           = anchoredToToday ? today : rawStart;
+        const startLabel      = anchoredToToday  ? 'Dziś (brak dat)'
+                              : useStatusDate    ? 'In Progress od'
+                              : etaDev           ? 'ETA Dev'
+                              : 'Dziś (brak dat)';
 
         const effectiveEnd = end ?? addDays(start, 7);
         const hasEdd       = !!eddDev || !!etaDev;
